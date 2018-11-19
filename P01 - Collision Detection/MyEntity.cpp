@@ -57,6 +57,10 @@ void Simplex::MyEntity::Release(void)
 	SafeDelete(m_pRigidBody);
 	m_IDMap.erase(m_sUniqueID);
 }
+bool Simplex::MyEntity::IsInMemory()
+{
+	return m_bInMemory;
+}
 //The big 3
 Simplex::MyEntity::MyEntity(String a_sFileName, String a_sUniqueID)
 {

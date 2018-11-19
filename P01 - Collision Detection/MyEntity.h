@@ -13,6 +13,7 @@ namespace Simplex
 //System Class
 class MyEntity
 {
+protected:
 	bool m_bInMemory = false; //loaded flag
 	bool m_bSetAxis = false; //render axis flag
 	String m_sUniqueID = ""; //Unique identifier name
@@ -29,6 +30,7 @@ class MyEntity
 	static std::map<String, MyEntity*> m_IDMap; //a map of the unique ID's
 
 public:
+	bool IsInMemory();
 	/*
 	Usage: Constructor that specifies the name attached to the MyEntity
 	Arguments:
@@ -172,7 +174,7 @@ public:
 	*/
 	void SortDimensions(void);
 
-private:
+protected:
 	/*
 	Usage: Deallocates member fields
 	Arguments: ---
