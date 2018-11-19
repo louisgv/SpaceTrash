@@ -6,6 +6,7 @@ Date: 2017/07
 #define __MYENTITYMANAGER_H_
 
 #include "MyEntity.h"
+#include "Bullet.h"
 
 namespace Simplex
 {
@@ -18,6 +19,16 @@ class MyEntityManager
 	PEntity* m_mEntityArray = nullptr; //array of MyEntity pointers
 	static MyEntityManager* m_pInstance; // Singleton pointer
 public:
+	///
+	/*
+	USAGE: Will add an entity to the list
+	ARGUMENTS:
+	-	String a_sFileName -> Name of the model to load
+	-	String a_sUniqueID -> Name wanted as identifier, if not available will generate one
+	OUTPUT: ---
+	*/
+	void AddEntity(Bullet* a_oBullet, String a_sUniqueID = "NA");
+	///
 	/*
 	Usage: Gets the singleton pointer
 	Arguments: ---
