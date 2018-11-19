@@ -142,6 +142,19 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 			m_pRoot = new MyOctant(m_uOctantLevels, 5);
 		}
 		break;
+
+	//test endgame condition checks - decrease object count (will be done on destruction of cubes) and decrease player health
+	case sf::Keyboard::O:
+		if (m_uObjects > 0) {
+			m_uObjects--;
+		}
+		break;
+	case sf::Keyboard::L:
+		if (m_uPlayerHealth > 0) {
+			m_uPlayerHealth -= 10;
+		}
+		break;
+
 	case sf::Keyboard::Space:
 		m_bVisual = !m_bVisual;
 		break;

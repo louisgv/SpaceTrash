@@ -468,3 +468,32 @@ void Application::WriteConfig(void)
 
 	fclose(pFile);
 }
+
+//end game check
+bool Simplex::Application::EndGameCheck(void)
+{
+	//check number of objects left, to see if player won. 
+	if (m_uObjects < 1) {
+		m_bEndGameWin = true;
+		return true;
+	}
+	//else check player health for loss
+	else if (m_uPlayerHealth < 1) {
+		m_bEndGameLoss = true;
+		return true;
+	}
+
+	//gui is updated automatically basically, need to set up what happens on endgame next but the check is here above
+	return false;
+}
+
+//if endgame check passes, end the game - not decided on how yet - different on win or loss
+void Simplex::Application::EndGame(void) {
+	//nothing rn
+	if (m_bEndGameWin) {
+		m_sEndGameMessage = "You Won!";
+	}
+	else {
+		m_sEndGameMessage = "You Lost!";
+	}
+}

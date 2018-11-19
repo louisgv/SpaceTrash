@@ -41,6 +41,14 @@ private:
 	bool m_bGUI_Test = false; //show Test GUI window?
 	bool m_bGUI_Controller = false; //show Controller GUI window?
 
+	//endgame bools
+	bool m_bEndGameWin = false;
+	bool m_bEndGameLoss = false;
+
+	String m_sEndGameMessage = "Not Ended Yet!";
+
+	uint m_uPlayerHealth = 100;
+
 	uint m_uRenderCallCount = 0; //count of render calls per frame
 	uint m_uControllerCount = 0; //count of controllers connected
 
@@ -147,6 +155,17 @@ private:
 	OUTPUT: ---
 	*/
 	void Release(void);
+#pragma endregion
+
+#pragma region End Game
+	/*
+	USAGE: For endgame detection
+	*/
+	bool EndGameCheck(void);
+	/*
+	USAGE: Actual endgame
+	*/
+	void EndGame(void);
 #pragma endregion
 
 #pragma region Main Loop
