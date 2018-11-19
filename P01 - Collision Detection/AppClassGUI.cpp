@@ -5,7 +5,7 @@ void Application::DrawGUI(void)
 {
 #pragma region Debugging Information
 	//Print info on the screen
-	uint nEmptyLines = 18;
+	uint nEmptyLines = 15;
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
 	//m_pMeshMngr->Print("						");
@@ -19,8 +19,18 @@ void Application::DrawGUI(void)
 	//m_pMeshMngr->Print("						");
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
-	//m_pMeshMngr->Print("Entity Count:");
-	//m_pMeshMngr->PrintLine(std::to_string(m_uObjects), C_BLUE);
+
+	m_pMeshMngr->Print("Entity Count:");
+	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), C_BLUE);
+	m_pMeshMngr->Print("Health:");
+	m_pMeshMngr->PrintLine(std::to_string(m_uPlayerHealth), C_BLUE);
+
+	m_pMeshMngr->Print("End Game Win (bool):");
+	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameWin), C_BLUE);
+	m_pMeshMngr->Print("End Game Loss (bool):");
+	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameLoss), C_BLUE);
+	m_pMeshMngr->Print("End Game Message:");
+	m_pMeshMngr->PrintLine(m_sEndGameMessage, C_BLUE);
 
 #pragma endregion
 

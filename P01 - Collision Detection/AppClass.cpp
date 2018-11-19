@@ -48,6 +48,11 @@ void Application::Update(void)
 	//Update Entity Manager
 	m_pEntityMngr->Update();
 
+	//check endgame conditions
+	if (EndGameCheck()) {
+		EndGame();
+	}
+
 	//Add objects to render list
 	m_pEntityMngr->AddEntityToRenderList(-1, true);
 }
