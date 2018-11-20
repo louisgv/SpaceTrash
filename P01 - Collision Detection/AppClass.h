@@ -46,10 +46,11 @@ private:
 	//endgame bools
 	bool m_bEndGameWin = false;
 	bool m_bEndGameLoss = false;
+	uint m_uTimeLeft = 10000;
 
 	String m_sEndGameMessage = "Not Ended Yet!";
 
-	uint m_uPlayerHealth = 100;
+	//uint m_uPlayerHealth = 100;
 
 	uint m_uRenderCallCount = 0; //count of render calls per frame
 	uint m_uControllerCount = 0; //count of controllers connected
@@ -201,6 +202,8 @@ private:
 	OUTPUT: ---
 	*/
 	void ReleaseControllers(void);
+	//check/run bullet
+	void BulletShoot(void);
 #pragma endregion
 
 #pragma region Application Controls

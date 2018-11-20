@@ -150,8 +150,8 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		}
 		break;
 	case sf::Keyboard::L:
-		if (m_uPlayerHealth > 0) {
-			m_uPlayerHealth -= 10;
+		if (m_uTimeLeft > 100) {
+			m_uTimeLeft -= 100;
 		}
 		break;
 

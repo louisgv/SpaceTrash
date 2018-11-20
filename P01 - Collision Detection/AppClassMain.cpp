@@ -472,13 +472,16 @@ void Application::WriteConfig(void)
 //end game check
 bool Simplex::Application::EndGameCheck(void)
 {
+	if (m_uTimeLeft > 0 && m_bEndGameWin == false && m_bEndGameLoss == false) {
+		m_uTimeLeft--;
+	}
 	//check number of objects left, to see if player won. 
 	if (m_uObjects < 1) {
 		m_bEndGameWin = true;
 		return true;
 	}
 	//else check player health for loss
-	else if (m_uPlayerHealth < 1) {
+	else if (m_uTimeLeft < 1) {
 		m_bEndGameLoss = true;
 		return true;
 	}
@@ -496,4 +499,53 @@ void Simplex::Application::EndGame(void) {
 	else {
 		m_sEndGameMessage = "You Lost!";
 	}
+}
+
+void Simplex::Application::BulletShoot(void) {
+	///
+	// uses timer system for percentage/lerp movement
+	static float fTimer = 0;    //store the new timer
+	static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
+	fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
+
+											   // checks if there is a current bullet
+	if (m_pBullet != nullptr)
+	{
+
+
+		// maps the values to be between 0 & 1
+		float fPercentage = MapValue(fTimer, 0.0f, m_pBullet->m_fSpeed, 0.0f, 1.0f);
+
+		// sets current position based on lerp
+		vector3 v3CurrentPos = glm::lerp(m_pBullet->m_v3StartPos, m_pBullet->m_v3EndPos, fPercentage);
+		matrix4 m4BulletModel = glm::translate(v3CurrentPos);
+		m_pBullet->SetModelMatrix(m4BulletModel);
+		m_pBullet->AddToRenderList();
+
+		// checks if bullet reaches its range
+		// if so, deletes bullet and resets timer
+		if (fPercentage > .99f)
+		{		
+
+			SafeDelete(m_pBullet);
+			m_pBullet = nullptr;	
+			fTimer = 0.f;
+		}
+
+		// checks for collisions and deletes bullet and entity it collides with
+		for (int x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
+			if (m_pBullet->IsColliding(m_pEntityMngr->GetEntity(x)))
+			{	
+				if (m_uObjects > 0) {
+					m_uObjects--;
+				}
+				SafeDelete(m_pBullet);
+				m_pBullet = nullptr;
+				m_pEntityMngr->RemoveEntity(x);
+				fTimer = 0.f;
+			}
+
+	}
+
+	///
 }
