@@ -26,6 +26,8 @@ class Application
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 	///
 	Bullet* m_pBullet = nullptr;
+	//for bullet
+	static float fTimer;    //store the new timer
 	///
 private:
 

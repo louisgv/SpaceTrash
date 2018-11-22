@@ -1,5 +1,6 @@
 #include "AppClass.h"
 using namespace Simplex;
+float Application::fTimer;
 sf::Image LoadImageFromResource(const std::string& name)
 {
 	HRSRC rsrcData = FindResource(NULL, name.c_str(), RT_RCDATA);
@@ -504,15 +505,14 @@ void Simplex::Application::EndGame(void) {
 void Simplex::Application::BulletShoot(void) {
 	///
 	// uses timer system for percentage/lerp movement
-	static float fTimer = 0;    //store the new timer
 	static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
-	fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
+	fTimer += m_pSystem->GetDeltaTime(uClock);
+	//fTimer moved to header to solve startpos/percentage bug
 
-											   // checks if there is a current bullet
+	// checks if there is a current bullet
 	if (m_pBullet != nullptr)
 	{
-
-
+		
 		// maps the values to be between 0 & 1
 		float fPercentage = MapValue(fTimer, 0.0f, m_pBullet->m_fSpeed, 0.0f, 1.0f);
 
