@@ -26,6 +26,8 @@ class Application
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 	///
 	Bullet* m_pBullet = nullptr;
+	uint playerIndex = 0;
+	MyEntity* m_pPlayer = nullptr;
 	///
 private:
 
