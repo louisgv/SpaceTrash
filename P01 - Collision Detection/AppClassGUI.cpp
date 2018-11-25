@@ -21,16 +21,16 @@ void Application::DrawGUI(void)
 	m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
 
 	m_pMeshMngr->Print("Entity Count:");
-	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), C_BLUE);
-	m_pMeshMngr->Print("Health:");
-	m_pMeshMngr->PrintLine(std::to_string(m_uPlayerHealth), C_BLUE);
+	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), C_RED);
+	m_pMeshMngr->Print("Time/Score:");
+	m_pMeshMngr->PrintLine(std::to_string(m_uTimeLeft), C_RED);
 
 	m_pMeshMngr->Print("End Game Win (bool):");
-	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameWin), C_BLUE);
+	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameWin), C_RED);
 	m_pMeshMngr->Print("End Game Loss (bool):");
-	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameLoss), C_BLUE);
+	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameLoss), C_RED);
 	m_pMeshMngr->Print("End Game Message:");
-	m_pMeshMngr->PrintLine(m_sEndGameMessage, C_BLUE);
+	m_pMeshMngr->PrintLine(m_sEndGameMessage, C_RED);
 
 #pragma endregion
 

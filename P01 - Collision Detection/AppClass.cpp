@@ -13,11 +13,12 @@ void Application::InitVariables(void)
 #ifdef DEBUG
 	uint uInstances = 9;
 #else
-	uint uInstances = 1849;
+	uint uInstances = 9;
 #endif
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
 	m_uObjects = nSquare * nSquare;
 	uint uIndex = -1;
+	fTimer = 0;
 	for (int i = 0; i < nSquare; i++)
 	{
 		for (int j = 0; j < nSquare; j++)
@@ -39,6 +40,8 @@ void Application::Update(void)
 	//Update the system so it knows how much time has passed since the last call
 	m_pSystem->Update();
 
+	BulletShoot();
+
 	//Is the ArcBall active?
 	ArcBall();
 
@@ -46,7 +49,9 @@ void Application::Update(void)
 	CameraRotation();
 
 	//Update Entity Manager
-	m_pEntityMngr->Update();
+	if (m_pEntityMngr->GetEntityCount() != 0) {
+		m_pEntityMngr->Update();
+	}
 
 	//check endgame conditions
 	if (EndGameCheck()) {
@@ -60,49 +65,6 @@ void Application::Display(void)
 {
 	// Clear the screen
 	ClearScreen();
-
-	///
-	// uses timer system for percentage/lerp movement
-	static float fTimer = 0;    //store the new timer
-	static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
-	fTimer += m_pSystem->GetDeltaTime(uClock); //get the delta time for that timer
-
-	// checks if there is a current bullet
-	if (m_pBullet != nullptr)
-	{
-
-
-		// maps the values to be between 0 & 1
-		float fPercentage = MapValue(fTimer, 0.0f, m_pBullet->m_fSpeed, 0.0f, 1.0f);
-
-		// sets current position based on lerp
-		vector3 v3CurrentPos = glm::lerp(m_pBullet->m_v3StartPos, m_pBullet->m_v3EndPos, fPercentage);
-		matrix4 m4BulletModel = glm::translate(v3CurrentPos);
-		m_pBullet->SetModelMatrix(m4BulletModel);
-		m_pBullet->AddToRenderList();
-
-		// checks if bullet reaches its range
-		// if so, deletes bullet and resets timer
-		if (fPercentage > .99f)
-		{
-			SafeDelete(m_pBullet);
-			m_pBullet = nullptr;
-			fTimer = 0.f;
-		}
-
-		// checks for collisions and deletes bullet and entity it collides with
-		for (int x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
-			if (m_pBullet->IsColliding(m_pEntityMngr->GetEntity(x)))
-			{
-				SafeDelete(m_pBullet);
-				m_pBullet = nullptr;
-				fTimer = 0.f;
-				m_pEntityMngr->RemoveEntity(x);
-			}
-
-	}
-
-	///
 
 	if (m_bVisual)
 	{
