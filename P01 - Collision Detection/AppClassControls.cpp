@@ -166,9 +166,15 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		if (m_pBullet == nullptr)
 		{
 			m_pBullet = new Bullet("Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f));
+			
+			
 			vector3 v3ForwardCam = glm::normalize(m_pCameraMngr->GetForward());
-			m_pBullet->m_v3StartPos = m_pCameraMngr->GetPosition();
+			
+			m_pBullet->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f;
+
 			m_pBullet->m_v3EndPos = m_pBullet->m_v3StartPos + (v3ForwardCam) * (m_pBullet->m_fRange * 3.f);
+
+
 			fTimer = 0;
 		}
 

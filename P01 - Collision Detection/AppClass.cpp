@@ -5,7 +5,7 @@ void Application::InitVariables(void)
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f, 0.0f, 0.0f), //Position
-		vector3(0.0f, 0.0f, -1.0f),	//Target
+		vector3(0.0f, 0.0f, -3.0f),	//Target
 		AXIS_Y);					//Up
 
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
@@ -24,7 +24,7 @@ void Application::InitVariables(void)
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\cube.obj");
+			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
 			matrix4 m4Position = glm::translate(v3Position) * glm::scale(vector3(.5f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
@@ -34,7 +34,7 @@ void Application::InitVariables(void)
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	/// player set up
-	m_pPlayer = new MyEntity("Planets\\00_Sun.obj", "player");
+	m_pPlayer = new MyEntity("Planets\\03A_Moon.obj", "Player");
 	///
 	
 	m_pEntityMngr->Update();
@@ -76,8 +76,11 @@ void Application::Display(void)
 	#pragma region PlayerAssignedCamPosition
 	// sets base player model on camera
 	// commented element used for creating object as crosshair for testing purposes
-	vector3 pos = m_pCameraMngr->GetPosition();  // + m_pCameraMngr->GetForward() * 2;
-	matrix4 m4pos = glm::translate(pos) * glm::scale(vector3(.5f));
+	vector3 pos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f; 
+	// + m_pCameraMngr->GetForward() * 2;
+
+	matrix4 m4pos = glm::translate(pos) * glm::scale(vector3(.2f));
+
 	m_pPlayer->SetModelMatrix(m4pos);
 	m_pPlayer->AddToRenderList();
 
