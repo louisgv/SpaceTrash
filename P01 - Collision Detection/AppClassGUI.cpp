@@ -5,7 +5,7 @@ void Application::DrawGUI(void)
 {
 #pragma region Debugging Information
 	//Print info on the screen
-	uint nEmptyLines = 15;
+	uint nEmptyLines = 18;
 	for (uint i = 0; i < nEmptyLines; ++i)
 		m_pMeshMngr->PrintLine("");//Add a line on top
 	//m_pMeshMngr->Print("						");
@@ -13,22 +13,12 @@ void Application::DrawGUI(void)
 	//m_pMeshMngr->Print("						");
 
 	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->Print("RenderCalls: ");//Add a line on top
-	m_pMeshMngr->PrintLine(std::to_string(m_uRenderCallCount), C_YELLOW);
 
-	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->Print("FPS:");
-	m_pMeshMngr->PrintLine(std::to_string(m_pSystem->GetFPS()), C_RED);
-
-	m_pMeshMngr->Print("Entity Count:");
+	m_pMeshMngr->Print("Debris Remaining:");
 	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), C_RED);
 	m_pMeshMngr->Print("Time/Score:");
 	m_pMeshMngr->PrintLine(std::to_string(m_uTimeLeft), C_RED);
 
-	m_pMeshMngr->Print("End Game Win (bool):");
-	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameWin), C_RED);
-	m_pMeshMngr->Print("End Game Loss (bool):");
-	m_pMeshMngr->PrintLine(std::to_string(m_bEndGameLoss), C_RED);
 	m_pMeshMngr->Print("End Game Message:");
 	m_pMeshMngr->PrintLine(m_sEndGameMessage, C_RED);
 
@@ -54,23 +44,10 @@ void Application::DrawGUI(void)
 			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
 				ImGui::GetIO().Framerate, 1000.0f / ImGui::GetIO().Framerate);
 			ImGui::Text("Levels in Octree: %d\n", m_uOctantLevels);
-			//ImGui::Text("Octants: %d\n", m_pRoot->GetOctantCount());
-			ImGui::Text("Objects: %d\n", m_uObjects);
 			ImGui::Separator();
 			ImGui::Text("Control:\n");
 			ImGui::Text("   WASD: Movement\n");
-			ImGui::Text("	 F1: Perspective\n");
-			ImGui::Text("	 F2: Orthographic X\n");
-			ImGui::Text("	 F3: Orthographic Y\n");
-			ImGui::Text("	 F4: Orthographic Z\n");
-			ImGui::Separator();
-			ImGui::Text(" PageUp: Increment Octant display\n");
-			ImGui::Text(" PageDw: Decrement Octant display\n");
-			ImGui::Separator();
-			ImGui::Text("	  -: Increment Octree subdivision\n");
-			ImGui::Text("	  +: Decrement Octree subdivision\n");
-			ImGui::Separator();
-			ImGui::Text(" Space: Toggle visual\n");
+			ImGui::Text("    LMB: Shoot bullet\n");
 		}
 		ImGui::End();
 	}
