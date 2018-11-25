@@ -26,9 +26,14 @@ class Application
 	uint m_uOctantLevels = 0; //Number of levels in the octree
 	///
 	Bullet* m_pBullet = nullptr;
+
+  uint playerIndex = 0;
+	MyEntity* m_pPlayer = nullptr;
+  
 	//for bullet
 	static float fTimer;    //store the new timer
-	///
+
+  ///
 private:
 
 	String m_sProjectName = "SpaceTrash";

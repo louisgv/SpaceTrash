@@ -4,8 +4,8 @@ void Application::InitVariables(void)
 {
 	//Set the position and target of the camera
 	m_pCameraMngr->SetPositionTargetAndUpward(
-		vector3(0.0f, 0.0f, 100.0f), //Position
-		vector3(0.0f, 0.0f, 99.0f),	//Target
+		vector3(0.0f, 0.0f, 0.0f), //Position
+		vector3(0.0f, 0.0f, -1.0f),	//Target
 		AXIS_Y);					//Up
 
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
@@ -24,15 +24,19 @@ void Application::InitVariables(void)
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
+			m_pEntityMngr->AddEntity("Minecraft\\cube.obj");
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
-			matrix4 m4Position = glm::translate(v3Position);
+			matrix4 m4Position = glm::translate(v3Position) * glm::scale(vector3(.5f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
 	m_uOctantLevels = 1;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
+	/// player set up
+	m_pPlayer = new MyEntity("Planets\\00_Sun.obj", "player");
+	///
+	
 	m_pEntityMngr->Update();
 }
 void Application::Update(void)
@@ -65,6 +69,27 @@ void Application::Display(void)
 {
 	// Clear the screen
 	ClearScreen();
+
+	///
+	// handles player model positioning and basic collision
+	// detection and resetting of player when colliding
+	#pragma region PlayerAssignedCamPosition
+	// sets base player model on camera
+	// commented element used for creating object as crosshair for testing purposes
+	vector3 pos = m_pCameraMngr->GetPosition();  // + m_pCameraMngr->GetForward() * 2;
+	matrix4 m4pos = glm::translate(pos) * glm::scale(vector3(.5f));
+	m_pPlayer->SetModelMatrix(m4pos);
+	m_pPlayer->AddToRenderList();
+
+	// resets position of camera to 0 vector if collided with debris, simulating death
+	for (int x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
+	{
+		if (m_pPlayer->GetRigidBody()->IsColliding(m_pEntityMngr->GetEntity(x)->GetRigidBody()))
+		{
+			m_pCameraMngr->SetPosition(vector3(0.f));
+		}
+	}
+	#pragma endregion
 
 	if (m_bVisual)
 	{
