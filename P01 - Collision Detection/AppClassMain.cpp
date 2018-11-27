@@ -80,6 +80,7 @@ void Application::Run(void)
 
 	// run the main loop
 	m_bRunning = true;
+	m_bUpdate = true;
 	sf::Vector2i pos = m_pWindow->getPosition();
 	sf::Vector2u size = m_pWindow->getSize();
 	while (m_bRunning)
@@ -157,7 +158,12 @@ void Application::Run(void)
 		}
 		ProcessKeyboard();//Continuous events
 		ProcessJoystick();//Continuous events
-		Update();
+
+		if (m_bUpdate)
+		{
+			Update();
+		}
+		
 		Display();
 	}
 
@@ -495,11 +501,12 @@ bool Simplex::Application::EndGameCheck(void)
 void Simplex::Application::EndGame(void) {
 	//nothing rn
 	if (m_bEndGameWin) {
-		m_sEndGameMessage = "You Won!";
+		m_sEndGameMessage = "You Won! Press ESC to quit.";
 	}
 	else {
-		m_sEndGameMessage = "You Lost!";
+		m_sEndGameMessage = "You Lost! Press ESC to quit.";
 	}
+	m_bUpdate = false;
 }
 
 void Simplex::Application::BulletShoot(void) {

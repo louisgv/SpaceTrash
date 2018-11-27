@@ -74,6 +74,9 @@ namespace Simplex
 
 		vector4 m_v4ClearColor; //Color of the scene
 		bool m_bRunning = false; //Is App running?
+
+		bool m_bUpdate = false;
+
 		bool m_bModifier = false; //is shift pressed?
 
 		sf::Window* m_pWindow = nullptr; //SFML window
