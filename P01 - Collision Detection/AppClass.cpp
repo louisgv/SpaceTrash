@@ -11,9 +11,10 @@ void Application::InitVariables(void)
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 #ifdef DEBUG
-	uint uInstances = 9;
+	uint uInstances = 900;
+	// m_fSphereRadius = 10.f;
 #else
-	uint uInstances = 9;
+	uint uInstances = 1800;
 #endif
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
 	m_uObjects = nSquare * nSquare;
@@ -30,7 +31,7 @@ void Application::InitVariables(void)
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
-	m_uOctantLevels = 1;
+	m_uOctantLevels = 2;
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	/// player set up
@@ -53,6 +54,7 @@ void Application::Update(void)
 	CameraRotation();
 
 	//Update Entity Manager
+
 	if (m_pEntityMngr->GetEntityCount() != 0) {
 		m_pEntityMngr->Update();
 	}
@@ -85,7 +87,7 @@ void Application::Display(void)
 	m_pPlayer->AddToRenderList();
 
 	// resets position of camera to 0 vector if collided with debris, simulating death
-	for (int x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
+	for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
 	{
 		if (m_pPlayer->GetRigidBody()->IsColliding(m_pEntityMngr->GetEntity(x)->GetRigidBody()))
 		{

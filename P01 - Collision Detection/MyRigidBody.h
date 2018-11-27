@@ -15,7 +15,7 @@ class MyRigidBody
 {
 	typedef MyRigidBody* PRigidBody; //Entity Pointer
 	MeshManager* m_pMeshMngr = nullptr; //for displaying the Rigid Body
-
+	
 	bool m_bVisibleBS = false; //Visibility of bounding sphere
 	bool m_bVisibleOBB = true; //Visibility of Oriented bounding box
 	bool m_bVisibleARBB = true; //Visibility of axis (Re)aligned bounding box
@@ -43,12 +43,15 @@ class MyRigidBody
 	PRigidBody* m_CollidingArray = nullptr; //array of rigid bodies this one is colliding with
 
 public:
+	String* m_pEntityUniqueID = nullptr; //Unique identifier name
+
 	/*
 	Usage: Constructor
 	Arguments: std::vector<vector3> a_pointList -> list of points to make the Rigid Body for
 	Output: class object instance
 	*/
-	MyRigidBody(std::vector<vector3> a_pointList);
+	MyRigidBody(std::vector<vector3> a_pointList, String* a_pEntityUniqueID);
+
 	/*
 	Usage: Copy Constructor
 	Arguments: class object to copy
@@ -238,6 +241,20 @@ public:
 	*/
 	bool IsInCollidingArray(MyRigidBody* a_pEntry);
 	
+	/*
+	USAGE: This will return the amount of colliding body
+	ARGUMENTS:
+	OUTPUT:
+	*/
+	uint GetCollisionCount();
+
+	/*
+	USAGE: This will return a list of all entity colliding with this rigidbody
+	ARGUMENTS:
+	OUTPUT:
+	*/
+	MyRigidBody** GetCollidingRigidBodies();
+
 private:
 	/*
 	Usage: Deallocates member fields
@@ -257,6 +274,7 @@ private:
 	OUTPUT: 0 for colliding, all other first axis that succeeds test
 	*/
 	uint SAT(MyRigidBody* const a_pOther);
+
 };//class
 
 } //namespace Simplex

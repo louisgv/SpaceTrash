@@ -533,17 +533,36 @@ void Simplex::Application::BulletShoot(void) {
 		}
 
 		// checks for collisions and deletes bullet and entity it collides with
-		for (int x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
-			if (m_pBullet->IsColliding(m_pEntityMngr->GetEntity(x)))
-			{	
+		for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++) {
+			MyEntity* pEntity = m_pEntityMngr->GetEntity(x);
+
+			if (m_pBullet->IsColliding(pEntity))
+			{
+				/*
+				MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
+				uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
+
+				for (uint i = 0; i < uAdjacentCount; i++)
+				{
+					if (m_uObjects > 0) {
+						m_uObjects--;
+					}
+
+					m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
+				}
+				*/
+
 				if (m_uObjects > 0) {
 					m_uObjects--;
 				}
+
+				m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
+				/*
 				SafeDelete(m_pBullet);
 				m_pBullet = nullptr;
-				m_pEntityMngr->RemoveEntity(x);
-				fTimer = 0.f;
+				fTimer = 0.f;*/
 			}
+		}
 
 	}
 

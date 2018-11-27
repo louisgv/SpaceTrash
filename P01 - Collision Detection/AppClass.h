@@ -40,10 +40,10 @@ namespace Simplex
 		String m_sProjectName = "SpaceTrash";
 		String m_sProgrammers = "\tLab N - lab@mail.rit.edu\n\tKyle F - kmf7094@g.rit.edu\n\tElliot P - ejp4604@rit.edu"; //programmer
 
-		float m_fSphereRadius = 34.f;
+		float m_fSphereRadius = 10.f;
 
 
-		bool m_bVisual = true;
+		bool m_bVisual = false;
 
 		static ImGuiObject gui; //GUI object
 		bool m_bGUI_Main = true; //show Main GUI window?
@@ -51,10 +51,10 @@ namespace Simplex
 		bool m_bGUI_Test = false; //show Test GUI window?
 		bool m_bGUI_Controller = false; //show Controller GUI window?
 
-		//endgame bools
+		//endgame boolsk
 		bool m_bEndGameWin = false;
 		bool m_bEndGameLoss = false;
-		uint m_uTimeLeft = 10000;
+		uint m_uTimeLeft = 100000;
 
 		String m_sEndGameMessage = "Not Ended Yet!";
 
