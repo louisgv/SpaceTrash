@@ -12,7 +12,7 @@ void Application::InitVariables(void)
 
 #ifdef DEBUG
 	uint uInstances = 10;
-	m_uTimeLeft = 1000;
+	m_uTimeLeft = 2000;
 	// m_fSphereRadius = 10.f;
 #else
 	uint uInstances = 1800;
@@ -26,7 +26,7 @@ void Application::InitVariables(void)
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
+			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MOBJ\\SpaceTrashModels\\Rock.obj");
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
 			matrix4 m4Position = glm::translate(v3Position) * glm::scale(vector3(.5f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
