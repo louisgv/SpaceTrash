@@ -73,7 +73,7 @@ Simplex::MyEntity::MyEntity(String a_sFileName, String a_sUniqueID)
 		GenUniqueID(a_sUniqueID);
 		m_sUniqueID = a_sUniqueID;
 		m_IDMap[a_sUniqueID] = this;
-		m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList()); //generate a rigid body
+		m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList(), &m_sUniqueID); //generate a rigid body
 		m_bInMemory = true; //mark this entity as viable
 	}
 }
@@ -82,10 +82,11 @@ Simplex::MyEntity::MyEntity(MyEntity const& other)
 	m_bInMemory = other.m_bInMemory;
 	m_pModel = other.m_pModel;
 	//generate a new rigid body we do not share the same rigid body as we do the model
-	m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList()); 
+	m_sUniqueID = other.m_sUniqueID;
+
+	m_pRigidBody = new MyRigidBody(m_pModel->GetVertexList(), &m_sUniqueID);
 	m_m4ToWorld = other.m_m4ToWorld;
 	m_pMeshMngr = other.m_pMeshMngr;
-	m_sUniqueID = other.m_sUniqueID;
 	m_bSetAxis = other.m_bSetAxis;
 	m_nDimensionCount = other.m_nDimensionCount;
 	m_DimensionArray = other.m_DimensionArray;

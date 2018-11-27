@@ -80,6 +80,7 @@ void Application::Run(void)
 
 	// run the main loop
 	m_bRunning = true;
+	m_bUpdate = true;
 	sf::Vector2i pos = m_pWindow->getPosition();
 	sf::Vector2u size = m_pWindow->getSize();
 	while (m_bRunning)
@@ -157,7 +158,12 @@ void Application::Run(void)
 		}
 		ProcessKeyboard();//Continuous events
 		ProcessJoystick();//Continuous events
-		Update();
+
+		if (m_bUpdate)
+		{
+			Update();
+		}
+		
 		Display();
 	}
 
@@ -495,11 +501,12 @@ bool Simplex::Application::EndGameCheck(void)
 void Simplex::Application::EndGame(void) {
 	//nothing rn
 	if (m_bEndGameWin) {
-		m_sEndGameMessage = "You Won!";
+		m_sEndGameMessage = "You Won! Press ESC to quit.";
 	}
 	else {
-		m_sEndGameMessage = "You Lost!";
+		m_sEndGameMessage = "You Lost! Press ESC to quit.";
 	}
+	m_bUpdate = false;
 }
 
 void Simplex::Application::BulletShoot(void) {
@@ -533,17 +540,36 @@ void Simplex::Application::BulletShoot(void) {
 		}
 
 		// checks for collisions and deletes bullet and entity it collides with
-		for (int x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
-			if (m_pBullet->IsColliding(m_pEntityMngr->GetEntity(x)))
-			{	
+		for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++) {
+			MyEntity* pEntity = m_pEntityMngr->GetEntity(x);
+
+			if (m_pBullet->IsColliding(pEntity))
+			{
+				/*
+				MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
+				uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
+
+				for (uint i = 0; i < uAdjacentCount; i++)
+				{
+					if (m_uObjects > 0) {
+						m_uObjects--;
+					}
+
+					m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
+				}
+				*/
+
 				if (m_uObjects > 0) {
 					m_uObjects--;
 				}
+
+				m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
+				/*
 				SafeDelete(m_pBullet);
 				m_pBullet = nullptr;
-				m_pEntityMngr->RemoveEntity(x);
-				fTimer = 0.f;
+				fTimer = 0.f;*/
 			}
+		}
 
 	}
 

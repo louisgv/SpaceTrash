@@ -133,11 +133,14 @@ void MyRigidBody::SetModelMatrix(matrix4 a_m4ModelMatrix)
 	m_v3ARBBSize = m_v3MaxG - m_v3MinG;
 }
 //The big 3
-MyRigidBody::MyRigidBody(std::vector<vector3> a_pointList)
+MyRigidBody::MyRigidBody(std::vector<vector3> a_pointList, String* a_pEntityUniqueID = nullptr)
 {
+
 	Init();
 	//Count the points of the incoming list
 	uint uVertexCount = a_pointList.size();
+
+	m_pEntityUniqueID = a_pEntityUniqueID;
 
 	//If there are none just return, we have no information to create the BS from
 	if (uVertexCount == 0)
@@ -172,6 +175,7 @@ MyRigidBody::MyRigidBody(std::vector<vector3> a_pointList)
 	//Get the distance between the center and either the min or the max
 	m_fRadius = glm::distance(m_v3CenterL, m_v3MinL);
 }
+
 MyRigidBody::MyRigidBody(MyRigidBody const& other)
 {
 	m_pMeshMngr = other.m_pMeshMngr;
@@ -281,6 +285,16 @@ uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 	//there is no axis test that separates this two objects
 	return 0;
 }
+
+uint Simplex::MyRigidBody::GetCollisionCount() {
+	return m_nCollidingCount;
+}
+
+MyRigidBody ** Simplex::MyRigidBody::GetCollidingRigidBodies()
+{
+	return m_CollidingArray;
+}
+
 bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 {
 	//check if spheres are colliding
