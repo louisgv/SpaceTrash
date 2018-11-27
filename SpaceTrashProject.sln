@@ -7,6 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Project", "Project", "{A8C5
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "P01 - Collision Detection", "P01 - Collision Detection\P01 - Collision Detection.vcxproj", "{44D2C07B-798D-461B-9019-DFB240593888}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "P02 - Collision Resolution", "P02 - Collision Resolution\P02 - Collision Resolution.vcxproj", "{C07F0537-65AC-48D5-98AE-DE49CEA6885D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x86 = Debug|x86
@@ -17,12 +19,17 @@ Global
 		{44D2C07B-798D-461B-9019-DFB240593888}.Debug|x86.Build.0 = Debug|Win32
 		{44D2C07B-798D-461B-9019-DFB240593888}.Release|x86.ActiveCfg = Release|Win32
 		{44D2C07B-798D-461B-9019-DFB240593888}.Release|x86.Build.0 = Release|Win32
+		{C07F0537-65AC-48D5-98AE-DE49CEA6885D}.Debug|x86.ActiveCfg = Debug|Win32
+		{C07F0537-65AC-48D5-98AE-DE49CEA6885D}.Debug|x86.Build.0 = Debug|Win32
+		{C07F0537-65AC-48D5-98AE-DE49CEA6885D}.Release|x86.ActiveCfg = Release|Win32
+		{C07F0537-65AC-48D5-98AE-DE49CEA6885D}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{44D2C07B-798D-461B-9019-DFB240593888} = {A8C5934B-38F4-49D4-A0E2-9A8F3F2945D3}
+		{C07F0537-65AC-48D5-98AE-DE49CEA6885D} = {A8C5934B-38F4-49D4-A0E2-9A8F3F2945D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A36545A6-DAAA-4856-BDB7-57C29F88BC6B}
