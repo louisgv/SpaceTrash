@@ -12,7 +12,7 @@ void Application::InitVariables(void)
 
 #ifdef DEBUG
 	uint uInstances = 10;
-	m_uTimeLeft = 1000;
+	m_uTimeLeft = 2000;
 	// m_fSphereRadius = 10.f;
 #else
 	uint uInstances = 1800;
@@ -26,7 +26,7 @@ void Application::InitVariables(void)
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("Minecraft\\Cube.obj");
+			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MFBX\\Rock.fbx");
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
 			matrix4 m4Position = glm::translate(v3Position) * glm::scale(vector3(.5f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
@@ -36,7 +36,7 @@ void Application::InitVariables(void)
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	/// player set up
-	m_pPlayer = new MyEntity("Planets\\03A_Moon.obj", "Player");
+	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
 	///
 	
 	m_pEntityMngr->Update();
@@ -80,9 +80,16 @@ void Application::Display(void)
 	// sets base player model on camera
 	// commented element used for creating object as crosshair for testing purposes
 	vector3 pos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f; 
+
+	vector3 v3Direction = m_pCameraMngr->GetForward();
+
 	// + m_pCameraMngr->GetForward() * 2;
 
-	matrix4 m4pos = glm::translate(pos) * glm::scale(vector3(.2f));
+	//rotation attempt - have to fix/clean up
+	float fAngle = dot(AXIS_X, m_pCameraMngr->GetForward());
+	quaternion qRotation = glm::angleAxis(acos(fAngle), cross(AXIS_X, m_pCameraMngr->GetForward()));
+
+	matrix4 m4pos = glm::translate(pos) * ToMatrix4(qRotation) * glm::scale(vector3(.2f));
 
 	m_pPlayer->SetModelMatrix(m4pos);
 	m_pPlayer->AddToRenderList();
