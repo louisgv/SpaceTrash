@@ -91,10 +91,10 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	case sf::Keyboard::Space:
 		m_sound.play();
 		break;
-	case sf::Keyboard::LShift:
-	case sf::Keyboard::RShift:
-		m_bModifier = true;
-		break;
+	//case sf::Keyboard::LShift:
+	//case sf::Keyboard::RShift:
+	//	m_bModifier = true;
+	//	break;
 	}
 
 	//gui
@@ -176,9 +176,9 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		m_bVisual = !m_bVisual;
 		break;
 		///
-	case sf::Keyboard::LShift:
-	case sf::Keyboard::RShift:
-		m_bModifier = false;
+	//case sf::Keyboard::LShift:
+	//case sf::Keyboard::RShift:
+	//	m_bModifier = false;
 	}
 
 	//gui
@@ -441,13 +441,13 @@ void Application::ProcessKeyboard(void)
 	for discreet on/off use ProcessKeyboardPressed/Released
 	*/
 #pragma region Camera Position
-	bool bMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+	//bool bMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+	//	sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
 	float fMultiplier = 1.0f;
 
-	if (bMultiplier)
-		fMultiplier = 5.0f;
+	//if (bMultiplier)
+	//	fMultiplier = 5.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		m_pCameraMngr->MoveForward(m_fMovementSpeed * fMultiplier);

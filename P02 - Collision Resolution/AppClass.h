@@ -40,7 +40,7 @@ namespace Simplex
 		String m_sProjectName = "SpaceTrash - Milestone 2";
 		String m_sProgrammers = "\tLab N - lab@mail.rit.edu\n\tKyle F - kmf7094@g.rit.edu\n\tElliot P - ejp4604@rit.edu"; //programmer
 
-		float m_fSphereRadius = 10.f;
+		float m_fSphereRadius = 15.f;
 
 
 		bool m_bVisual = false;

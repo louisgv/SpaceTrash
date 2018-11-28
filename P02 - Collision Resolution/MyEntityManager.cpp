@@ -210,7 +210,7 @@ void Simplex::MyEntityManager::Update(void)
 				if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j]))
 				{
 					RemoveEntity(i);
-					RemoveEntity(j);
+					//RemoveEntity(j);
 				}
 		}
 	}

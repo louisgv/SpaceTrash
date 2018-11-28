@@ -12,7 +12,7 @@ void Application::InitVariables(void)
 
 #ifdef DEBUG
 	uint uInstances = 10;
-	m_uTimeLeft = 2000;
+	m_uTimeLeft = uInstances * 110;
 	// m_fSphereRadius = 10.f;
 #else
 	uint uInstances = 1800;
@@ -31,7 +31,7 @@ void Application::InitVariables(void)
 
 			//random rotation for asteroids 
 			matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians((float)rand()), glm::vec3(rand(),rand(),rand()));
-			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.5f));
+			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.3f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
@@ -49,6 +49,7 @@ void Application::Update(void)
 	//Update the system so it knows how much time has passed since the last call
 	m_pSystem->Update();
 
+	//update bullet stuff
 	BulletShoot();
 
 	//Is the ArcBall active?
@@ -57,8 +58,11 @@ void Application::Update(void)
 	//Is the first person camera active?
 	CameraRotation();
 
-	//Update Entity Manager
+	//update object count
+	m_uObjects = m_pEntityMngr->GetEntityCount();
 
+	//Update Entity Manager
+	//if there are no entities, dont update - prevent freeze
 	if (m_pEntityMngr->GetEntityCount() != 0) {
 		m_pEntityMngr->Update();
 	}
