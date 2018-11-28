@@ -22,19 +22,17 @@ void Application::ProcessMousePressed(sf::Event a_event)
 		// creates bullet if there is none
 	
 		// sets the start and end positions of bullet
-		if (m_pBullet == nullptr)
+		if (m_pBullet.size() < 5)
 		{
-			m_pBullet = new Bullet("Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f));
-
+			m_pBullet.push_back(new Bullet("Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f)));
 
 			vector3 v3ForwardCam = glm::normalize(m_pCameraMngr->GetForward());
+	
+			m_pBullet.back()->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f;
 
-			m_pBullet->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f;
+			m_pBullet.back()->m_v3EndPos = m_pBullet.back()->m_v3StartPos + (v3ForwardCam) * (m_pBullet.back()->m_fRange * 3.f);
 
-			m_pBullet->m_v3EndPos = m_pBullet->m_v3StartPos + (v3ForwardCam) * (m_pBullet->m_fRange * 3.f);
-
-
-			fTimer = 0;
+			//m_pBullet.back()->fTimer = 0;
 		}
 		break;
 	case sf::Mouse::Button::Middle:

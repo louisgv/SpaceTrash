@@ -1,6 +1,5 @@
 #include "AppClass.h"
 using namespace Simplex;
-float Application::fTimer;
 sf::Image LoadImageFromResource(const std::string& name)
 {
 	HRSRC rsrcData = FindResource(NULL, name.c_str(), RT_RCDATA);
@@ -511,67 +510,75 @@ void Simplex::Application::EndGame(void) {
 
 void Simplex::Application::BulletShoot(void) {
 	///
-	// uses timer system for percentage/lerp movement
-	static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
-	fTimer += m_pSystem->GetDeltaTime(uClock);
-	//fTimer moved to header to solve startpos/percentage bug
-
-	// checks if there is a current bullet
-	if (m_pBullet != nullptr)
+	if (m_pBullet.size() != 0) 
 	{
-		
-		// maps the values to be between 0 & 1
-		float fPercentage = MapValue(fTimer, 0.0f, m_pBullet->m_fSpeed, 0.0f, 1.0f);
-
-		// sets current position based on lerp
-		vector3 v3CurrentPos = glm::lerp(m_pBullet->m_v3StartPos, m_pBullet->m_v3EndPos, fPercentage);
-		matrix4 m4BulletModel = glm::translate(v3CurrentPos);
-		m_pBullet->SetModelMatrix(m4BulletModel);
-		m_pBullet->AddToRenderList();
-
-		// checks if bullet reaches its range
-		// if so, deletes bullet and resets timer
-		if (fPercentage > .99f)
-		{		
-
-			SafeDelete(m_pBullet);
-			m_pBullet = nullptr;	
-			fTimer = 0.f;
-		}
-
-		// checks for collisions and deletes bullet and entity it collides with
-		for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++) {
-			MyEntity* pEntity = m_pEntityMngr->GetEntity(x);
-
-			if (m_pBullet->IsColliding(pEntity))
+		for (uint q = 0; q < m_pBullet.size(); q++) 
+		{
+			if (m_pBullet[q] != nullptr)
 			{
-				/*
-				MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
-				uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
+				//// uses timer system for percentage/lerp movement
+				//static uint uClock = m_pSystem->GenClock(); //generate a new clock for that timer
+				//m_pBullet[q]->fTimer += m_pSystem->GetDeltaTime(uClock);
+				//clock wasn't working with multiple bullets
+				m_pBullet[q]->fTimer += .03f;
 
-				for (uint i = 0; i < uAdjacentCount; i++)
+				// maps the values to be between 0 & 1
+				float fPercentage = MapValue(m_pBullet[q]->fTimer, 0.0f, m_pBullet[q]->m_fSpeed, 0.0f, 1.0f);
+
+				// sets current position based on lerp
+				vector3 v3CurrentPos = glm::lerp(m_pBullet[q]->m_v3StartPos, m_pBullet[q]->m_v3EndPos, fPercentage);
+				matrix4 m4BulletModel = glm::translate(v3CurrentPos);
+				m_pBullet[q]->SetModelMatrix(m4BulletModel);
+				m_pBullet[q]->AddToRenderList();
+
+				// checks for collisions and deletes bullet and entity it collides with
+				for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++) 
 				{
-					if (m_uObjects > 0) {
+					MyEntity* pEntity = m_pEntityMngr->GetEntity(x);
+
+					if (m_pBullet[q]->IsColliding(pEntity))
+					{
+						/*
+						MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
+						uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
+
+						for (uint i = 0; i < uAdjacentCount; i++)
+						{
+						if (m_uObjects > 0) {
 						m_uObjects--;
+						}
+
+						m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
+						}
+						*/
+
+						if (m_uObjects > 0) {
+							m_uObjects--;
+						}
+
+						m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
+						/*
+						SafeDelete(m_pBullet);
+						m_pBullet = nullptr;
+						fTimer = 0.f;*/
 					}
-
-					m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
-				}
-				*/
-
-				if (m_uObjects > 0) {
-					m_uObjects--;
 				}
 
-				m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
-				/*
-				SafeDelete(m_pBullet);
-				m_pBullet = nullptr;
-				fTimer = 0.f;*/
+				// checks if bullet reaches its range
+				if (fPercentage > .99f)
+				{
+
+					SafeDelete(m_pBullet[q]);
+					m_pBullet.pop_front();
+					//element = nullptr;
+				}
 			}
+			
 		}
-
 	}
+
+
+
 
 	///
 }

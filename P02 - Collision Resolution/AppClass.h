@@ -12,6 +12,7 @@ Date: 2017/06
 
 #include "MyEntityManager.h"
 #include "MyOctant.h"
+#include <queue>
 
 namespace Simplex
 {
@@ -25,14 +26,15 @@ namespace Simplex
 		uint m_uObjects = 0; //Number of objects in the scene
 		uint m_uOctantLevels = 0; //Number of levels in the octree
 		///
-		Bullet* m_pBullet = nullptr;
+		std::deque<Bullet*> m_pBullet;
+		Bullet* m_newBullet;
 
 		uint m_uPlayerIndex = 0;
 
 		MyEntity* m_pPlayer = nullptr;
 
 		//for bullet
-		static float fTimer;    //store the new timer
+		//static float fTimer;    //store the new timer
 
 	  ///
 	private:
@@ -54,7 +56,7 @@ namespace Simplex
 		//endgame boolsk
 		bool m_bEndGameWin = false;
 		bool m_bEndGameLoss = false;
-		uint m_uTimeLeft = 100000;
+		uint m_uTimeLeft = 10000;
 
 		String m_sEndGameMessage = "Not Ended Yet!";
 
