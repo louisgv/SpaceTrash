@@ -26,9 +26,12 @@ void Application::InitVariables(void)
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MFBX\\Rock.fbx");
+			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MFBX\\Rock.fbx"); //load rock
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
-			matrix4 m4Position = glm::translate(v3Position) * glm::scale(vector3(.5f));
+
+			//random rotation for asteroids 
+			matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians((float)rand()), glm::vec3(rand(),rand(),rand()));
+			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.5f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
