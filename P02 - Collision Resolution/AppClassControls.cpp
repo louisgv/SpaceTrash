@@ -22,10 +22,11 @@ void Application::ProcessMousePressed(sf::Event a_event)
 		// creates bullet if there is none
 	
 		// sets the start and end positions of bullet
-		if (m_pBullet.size() < 5)
+		if (m_pBullet.size() < 6)
 		{
-			m_pBullet.push_back(new Bullet("Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f)));
-
+			//m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MFBX\\Missile.fbx", "bullet", vector3(0, 0, -.1f)));
+			m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MOBJ\\Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f)));
+			
 			vector3 v3ForwardCam = glm::normalize(m_pCameraMngr->GetForward());
 	
 			m_pBullet.back()->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f;
@@ -407,6 +408,7 @@ void Application::CameraRotation(float a_fSpeed)
 	{
 		fDeltaMouse = static_cast<float>(CenterX - MouseX);
 		fAngleY += fDeltaMouse * a_fSpeed;
+
 	}
 	else if (MouseX > CenterX)
 	{
@@ -425,8 +427,11 @@ void Application::CameraRotation(float a_fSpeed)
 		fAngleX += fDeltaMouse * a_fSpeed;
 	}
 	//Change the Yaw and the Pitch of the camera
-	m_pCameraMngr->ChangeYaw(fAngleY * 0.25f);
-	m_pCameraMngr->ChangePitch(-fAngleX * 0.25f);
+	m_pCameraMngr->ChangeYaw(fAngleY * 0.1f);
+	m_pCameraMngr->ChangePitch(-fAngleX * 0.1f);
+
+
+
 	SetCursorPos(CenterX, CenterY);//Position the mouse in the center
 }
 //Keyboard

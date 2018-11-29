@@ -11,14 +11,15 @@ void Application::InitVariables(void)
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 #ifdef DEBUG
-	uint uInstances = 30;
-	m_uTimeLeft = uInstances * 50;
+	uint uInstances = 100;
+	m_uTimeLeft = uInstances * 60;
 	// m_fSphereRadius = 10.f;
 #else
-	uint uInstances = 180;
-	m_uTimeLeft = uInstances * 50;
+	uint uInstances = 800;
+	m_uTimeLeft = uInstances * 60;
 #endif
 
+	m_uLives = 3;
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
 	m_uObjects = nSquare * nSquare;
 	uint uIndex = -1;
@@ -33,7 +34,7 @@ void Application::InitVariables(void)
 
 			//random rotation for asteroids 
 			matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians((float)rand()), glm::vec3(rand(),rand(),rand()));
-			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.3f));
+			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.45f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
@@ -41,7 +42,8 @@ void Application::InitVariables(void)
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	/// player set up
-	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
+	//m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
+	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03A_Moon.obj", "Player");
 	///
 	
 	m_pEntityMngr->Update();
@@ -88,17 +90,11 @@ void Application::Display(void)
 	#pragma region PlayerAssignedCamPosition
 	// sets base player model on camera
 	// commented element used for creating object as crosshair for testing purposes
-	vector3 pos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f; 
+	vector3 pos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() - m_pCameraMngr->GetUpward() * .5f; 
 
 	vector3 v3Direction = m_pCameraMngr->GetForward();
 
-	// + m_pCameraMngr->GetForward() * 2;
-
-	//rotation attempt - have to fix/clean up
-	float fAngle = dot(AXIS_X, m_pCameraMngr->GetForward());
-	quaternion qRotation = glm::angleAxis(acos(fAngle), cross(AXIS_X, m_pCameraMngr->GetForward()));
-
-	matrix4 m4pos = glm::translate(pos) * ToMatrix4(qRotation) * glm::scale(vector3(.2f));
+	matrix4 m4pos = glm::translate(pos) * glm::scale(vector3(.2f));
 
 	m_pPlayer->SetModelMatrix(m4pos);
 	m_pPlayer->AddToRenderList();
@@ -108,7 +104,9 @@ void Application::Display(void)
 	{
 		if (m_pPlayer->GetRigidBody()->IsColliding(m_pEntityMngr->GetEntity(x)->GetRigidBody()))
 		{
-			m_pCameraMngr->SetPosition(vector3(0.f));
+			//m_pCameraMngr->SetPosition(vector3(0.f));
+			m_pCameraMngr->ResetCamera();
+			m_uLives--;
 		}
 	}
 	#pragma endregion

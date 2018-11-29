@@ -486,8 +486,8 @@ bool Simplex::Application::EndGameCheck(void)
 		m_bEndGameWin = true;
 		return true;
 	}
-	//else check player health for loss
-	else if (m_uTimeLeft < 1) {
+	//else check time and lives for loss
+	else if (m_uTimeLeft < 1 || m_uLives < 1) {
 		m_bEndGameLoss = true;
 		return true;
 	}
@@ -527,7 +527,8 @@ void Simplex::Application::BulletShoot(void) {
 
 				// sets current position based on lerp
 				vector3 v3CurrentPos = glm::lerp(m_pBullet[q]->m_v3StartPos, m_pBullet[q]->m_v3EndPos, fPercentage);
-				matrix4 m4BulletModel = glm::translate(v3CurrentPos);
+				//basic rotation to start - 180 around y
+				matrix4 m4BulletModel = glm::translate(v3CurrentPos) * glm::scale(vector3(.2f));;
 				m_pBullet[q]->SetModelMatrix(m4BulletModel);
 				m_pBullet[q]->AddToRenderList();
 
@@ -557,10 +558,11 @@ void Simplex::Application::BulletShoot(void) {
 						}
 
 						m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
-						/*
-						SafeDelete(m_pBullet);
-						m_pBullet = nullptr;
-						fTimer = 0.f;*/
+
+						//if we want bullets to hit one and be done
+						//SafeDelete(m_pBullet[q]);
+						//m_pBullet.pop_front();
+						//return;
 					}
 				}
 
