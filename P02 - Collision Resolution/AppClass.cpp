@@ -90,7 +90,7 @@ void Application::Display(void)
 	#pragma region PlayerAssignedCamPosition
 	// sets base player model on camera
 	// commented element used for creating object as crosshair for testing purposes
-	vector3 pos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() - m_pCameraMngr->GetUpward() * .5f; 
+	vector3 pos = m_pCameraMngr->GetPosition() - m_pCameraMngr->GetForward() - m_pCameraMngr->GetUpward() * .5f; 
 
 	vector3 v3Direction = m_pCameraMngr->GetForward();
 
