@@ -29,7 +29,7 @@ void Application::ProcessMousePressed(sf::Event a_event)
 			
 			vector3 v3ForwardCam = glm::normalize(m_pCameraMngr->GetForward());
 	
-			m_pBullet.back()->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f;
+			m_pBullet.back()->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * .5 - m_pCameraMngr->GetUpward() * .2f;
 
 			m_pBullet.back()->m_v3EndPos = m_pBullet.back()->m_v3StartPos + (v3ForwardCam) * (m_pBullet.back()->m_fRange * 3.f);
 
@@ -72,14 +72,14 @@ void Application::ProcessMouseReleased(sf::Event a_event)
 }
 void Application::ProcessMouseScroll(sf::Event a_event)
 {
-	gui.io.MouseWheel = a_event.mouseWheelScroll.delta;
-	float fSpeed = a_event.mouseWheelScroll.delta;
-	float fMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+	//gui.io.MouseWheel = a_event.mouseWheelScroll.delta;
+	//float fSpeed = a_event.mouseWheelScroll.delta;
+	//float fMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+	//	sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
-	if (fMultiplier)
-		fSpeed *= 2.0f;
-	m_pCameraMngr->MoveForward(-fSpeed);
+	//if (fMultiplier)
+	//	fSpeed *= 2.0f;
+	//m_pCameraMngr->MoveForward(-fSpeed);
 }
 //Keyboard
 void Application::ProcessKeyPressed(sf::Event a_event)
@@ -111,18 +111,18 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	case sf::Keyboard::Escape:
 		m_bRunning = false;
 		break;
-	case sf::Keyboard::F1:
-		m_pCameraMngr->SetCameraMode(CAM_PERSP);
-		break;
-	case sf::Keyboard::F2:
-		m_pCameraMngr->SetCameraMode(CAM_ORTHO_Z);
-		break;
-	case sf::Keyboard::F3:
-		m_pCameraMngr->SetCameraMode(CAM_ORTHO_Y);
-		break;
-	case sf::Keyboard::F4:
-		m_pCameraMngr->SetCameraMode(CAM_ORTHO_X);
-		break;
+	//case sf::Keyboard::F1:
+	//	m_pCameraMngr->SetCameraMode(CAM_PERSP);
+	//	break;
+	//case sf::Keyboard::F2:
+	//	m_pCameraMngr->SetCameraMode(CAM_ORTHO_Z);
+	//	break;
+	//case sf::Keyboard::F3:
+	//	m_pCameraMngr->SetCameraMode(CAM_ORTHO_Y);
+	//	break;
+	//case sf::Keyboard::F4:
+	//	m_pCameraMngr->SetCameraMode(CAM_ORTHO_X);
+	//	break;
 	case sf::Keyboard::F:
 		bFPSControl = !bFPSControl;
 		m_pCameraMngr->SetFPS(bFPSControl);
@@ -160,16 +160,16 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		break;
 
 	//test endgame condition checks - decrease object count (will be done on destruction of cubes) and decrease player health
-	case sf::Keyboard::O:
-		if (m_uObjects > 0) {
-			m_uObjects--;
-		}
-		break;
-	case sf::Keyboard::L:
-		if (m_uTimeLeft > 100) {
-			m_uTimeLeft -= 100;
-		}
-		break;
+	//case sf::Keyboard::O:
+	//	if (m_uObjects > 0) {
+	//		m_uObjects--;
+	//	}
+	//	break;
+	//case sf::Keyboard::L:
+	//	if (m_uTimeLeft > 100) {
+	//		m_uTimeLeft -= 100;
+	//	}
+	//	break;
 
 	case sf::Keyboard::Space:
 		m_bVisual = !m_bVisual;
