@@ -11,12 +11,11 @@ void Application::InitVariables(void)
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 #ifdef DEBUG
-	uint uInstances = 100;
-	m_uTimeLeft = uInstances * 60;
-	// m_fSphereRadius = 10.f;
+	uint uInstances = 20;
+	m_uTimeLeft = uInstances * 100;
 #else
-	uint uInstances = 100;
-	m_uTimeLeft = uInstances * 60;
+	uint uInstances = 2000;
+	m_uTimeLeft = 11000;
 #endif
 
 	m_uLives = 3;

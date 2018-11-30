@@ -34,7 +34,7 @@ namespace Simplex
 		MyEntity* m_pPlayer = nullptr;
 
 		uint m_uLives;
-
+		bool m_bSingleHit = false;
 
 	  ///
 	private:

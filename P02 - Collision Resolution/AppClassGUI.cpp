@@ -67,7 +67,9 @@ void Application::DrawGUI(void)
 			ImGui::Text("      Esc: Exit\n");
 			ImGui::Text("      +/-: Inc/Dec Octant Levels\n");
 			ImGui::Text("PgUp/PgDn: Go Through Octants\n");
-			ImGui::Text("    Space: Hide/Show Octree\n");
+			ImGui::Text("    Space: Toggle Octree\n");
+			ImGui::Text("Mid Mouse: Toggle OBB");
+			ImGui::Text("        R: Toggle 1-Hit Bullets");
 		}
 		ImGui::End();
 	}
