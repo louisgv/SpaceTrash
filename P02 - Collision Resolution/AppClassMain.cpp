@@ -557,6 +557,8 @@ void Simplex::Application::BulletShoot(void) {
 							m_uObjects--;
 						}
 
+						m_soundTwo.play();
+
 						m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
 
 						if (m_bSingleHit) {

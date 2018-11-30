@@ -27,7 +27,6 @@ namespace Simplex
 		uint m_uOctantLevels = 0; //Number of levels in the octree
 		///
 		std::deque<Bullet*> m_pBullet;
-		Bullet* m_newBullet;
 
 		uint m_uPlayerIndex = 0;
 
@@ -91,7 +90,9 @@ namespace Simplex
 		uint m_uActCont = 0; //Active Controller of the Application
 
 		sf::SoundBuffer m_soundBuffer; //buffer to play sound from
+		sf::SoundBuffer m_soundBufferTwo; //buffer to play sound from
 		sf::Sound m_sound; //sound effect
+		sf::Sound m_soundTwo;
 		sf::Music m_soundBGM; //background music
 
 	public:

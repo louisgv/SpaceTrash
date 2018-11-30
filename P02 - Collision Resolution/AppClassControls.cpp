@@ -37,6 +37,7 @@ void Application::ProcessMousePressed(sf::Event a_event)
 
 			m_pBullet.back()->m_v3EndPos = m_pBullet.back()->m_v3StartPos + (v3ForwardCam) * (m_pBullet.back()->m_fRange * 3.f);
 
+			m_sound.play();
 			//m_pBullet.back()->fTimer = 0;
 		}
 		break;
@@ -96,7 +97,7 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	{
 	default: break;
 	case sf::Keyboard::Space:
-		m_sound.play();
+		//m_sound.play();
 		break;
 	//case sf::Keyboard::LShift:
 	//case sf::Keyboard::RShift:

@@ -64,6 +64,7 @@ void Application::DrawGUI(void)
 			ImGui::Text("Control:\n");
 			ImGui::Text("  WASD/QE: Movement\n");
 			ImGui::Text("      LMB: Shoot\n");
+			ImGui::Text("      RMB: Rotate Camera\n");
 			ImGui::Text("      Esc: Exit\n");
 			ImGui::Text("      +/-: Inc/Dec Octant Levels\n");
 			ImGui::Text("PgUp/PgDn: Go Through Octants\n");

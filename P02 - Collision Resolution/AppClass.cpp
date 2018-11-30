@@ -18,6 +18,14 @@ void Application::InitVariables(void)
 	m_uTimeLeft = 11000;
 #endif
 
+	//sound stuff
+	m_soundBuffer.loadFromFile("..\\_Binary\\Data\\Audio\\Lazer02.wav");
+	m_soundBufferTwo.loadFromFile("..\\_Binary\\Data\\Audio\\LowCrash.wav");
+	m_sound.setBuffer(m_soundBuffer);
+	m_soundTwo.setBuffer(m_soundBufferTwo);
+	m_sound.setVolume(30.0f);
+	m_soundTwo.setVolume(75.0f);
+
 	m_uLives = 3;
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
 	m_uObjects = nSquare * nSquare;
@@ -131,6 +139,7 @@ void Application::Display(void)
 		{
 			//m_pCameraMngr->SetPosition(vector3(0.f));
 			m_pCameraMngr->ResetCamera();
+			m_soundTwo.play();
 			m_uLives--;
 		}
 	}
@@ -162,6 +171,8 @@ void Application::Display(void)
 }
 void Application::Release(void)
 {
+	SafeDelete(m_pPlayer);
+	m_pBullet.clear();
 	//release GUI
 	ShutdownGUI();
 }
