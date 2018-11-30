@@ -15,7 +15,7 @@ void Application::InitVariables(void)
 	m_uTimeLeft = uInstances * 60;
 	// m_fSphereRadius = 10.f;
 #else
-	uint uInstances = 800;
+	uint uInstances = 100;
 	m_uTimeLeft = uInstances * 60;
 #endif
 
@@ -85,6 +85,32 @@ void Application::Display(void)
 	ClearScreen();
 
 	///
+#pragma region BoundsCheck
+	if (m_pCameraMngr->GetPosition().x > m_pRoot->GetMaxGlobal().x + 1)
+		m_pCameraMngr->SetPosition(vector3(m_pRoot->GetMinGlobal().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z));
+	if(m_pCameraMngr->GetPosition().x < m_pRoot->GetMinGlobal().x - 1)
+		m_pCameraMngr->SetPosition(vector3(m_pRoot->GetMaxGlobal().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z));
+
+	if (m_pCameraMngr->GetPosition().y > m_pRoot->GetMaxGlobal().y + 1)
+	{
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pRoot->GetMinGlobal().y, m_pCameraMngr->GetPosition().z));
+		m_pCameraMngr->SetTarget(vector3(m_pCameraMngr->GetPosition().x - .3f, m_pCameraMngr->GetPosition().y + 2.7f, m_pCameraMngr->GetPosition().z));
+
+	}
+	if (m_pCameraMngr->GetPosition().y < m_pRoot->GetMinGlobal().y - 1)
+	{
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pRoot->GetMaxGlobal().y, m_pCameraMngr->GetPosition().z));
+		m_pCameraMngr->SetTarget(vector3(m_pCameraMngr->GetPosition().x - .3f, m_pCameraMngr->GetPosition().y - 2.7f, m_pCameraMngr->GetPosition().z));
+
+	}
+		
+	if (m_pCameraMngr->GetPosition().z > m_pRoot->GetMaxGlobal().z + 1)
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y,  m_pRoot->GetMinGlobal().z));
+	if (m_pCameraMngr->GetPosition().z < m_pRoot->GetMinGlobal().z - 1)
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pRoot->GetMaxGlobal().z));
+
+#pragma endregion 
+
 	// handles player model positioning and basic collision
 	// detection and resetting of player when colliding
 	#pragma region PlayerAssignedCamPosition
