@@ -11,7 +11,8 @@ namespace Simplex
 		float m_fSpeed;
 		vector3 m_v3StartPos;
 		vector3 m_v3EndPos;
-		float m_fRange = 20.f;
+		float m_fRange = 17.f;
+		float fTimer = 0.0f;
 		~Bullet();
 		bool IsColliding(MyEntity* const other);
 	};

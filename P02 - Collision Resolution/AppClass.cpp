@@ -11,24 +11,30 @@ void Application::InitVariables(void)
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 #ifdef DEBUG
-	uint uInstances = 10;
-	m_uTimeLeft = 2000;
+	uint uInstances = 100;
+	m_uTimeLeft = uInstances * 60;
 	// m_fSphereRadius = 10.f;
 #else
-	uint uInstances = 1800;
+	uint uInstances = 100;
+	m_uTimeLeft = uInstances * 60;
 #endif
+
+	m_uLives = 3;
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
 	m_uObjects = nSquare * nSquare;
 	uint uIndex = -1;
-	fTimer = 0;
+	//fTimer = 0;
 	for (int i = 0; i < nSquare; i++)
 	{
 		for (int j = 0; j < nSquare; j++)
 		{
 			uIndex++;
-			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MFBX\\Rock.fbx");
+			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MFBX\\Rock.fbx"); //load rock
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
-			matrix4 m4Position = glm::translate(v3Position) * glm::scale(vector3(.5f));
+
+			//random rotation for asteroids 
+			matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians((float)rand()), glm::vec3(rand(),rand(),rand()));
+			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.45f));
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
@@ -36,7 +42,8 @@ void Application::InitVariables(void)
 	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	/// player set up
-	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
+	//m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
+	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03A_Moon.obj", "Player");
 	///
 	
 	m_pEntityMngr->Update();
@@ -46,6 +53,7 @@ void Application::Update(void)
 	//Update the system so it knows how much time has passed since the last call
 	m_pSystem->Update();
 
+	//update bullet stuff
 	BulletShoot();
 
 	//Is the ArcBall active?
@@ -54,8 +62,11 @@ void Application::Update(void)
 	//Is the first person camera active?
 	CameraRotation();
 
-	//Update Entity Manager
+	//update object count
+	m_uObjects = m_pEntityMngr->GetEntityCount();
 
+	//Update Entity Manager
+	//if there are no entities, dont update - prevent freeze
 	if (m_pEntityMngr->GetEntityCount() != 0) {
 		m_pEntityMngr->Update();
 	}
@@ -74,22 +85,42 @@ void Application::Display(void)
 	ClearScreen();
 
 	///
+#pragma region BoundsCheck
+	if (m_pCameraMngr->GetPosition().x > m_pRoot->GetMaxGlobal().x + 1)
+		m_pCameraMngr->SetPosition(vector3(m_pRoot->GetMinGlobal().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z));
+	if(m_pCameraMngr->GetPosition().x < m_pRoot->GetMinGlobal().x - 1)
+		m_pCameraMngr->SetPosition(vector3(m_pRoot->GetMaxGlobal().x, m_pCameraMngr->GetPosition().y, m_pCameraMngr->GetPosition().z));
+
+	if (m_pCameraMngr->GetPosition().y > m_pRoot->GetMaxGlobal().y + 1)
+	{
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pRoot->GetMinGlobal().y, m_pCameraMngr->GetPosition().z));
+		m_pCameraMngr->SetTarget(vector3(m_pCameraMngr->GetPosition().x - .3f, m_pCameraMngr->GetPosition().y + 2.7f, m_pCameraMngr->GetPosition().z));
+
+	}
+	if (m_pCameraMngr->GetPosition().y < m_pRoot->GetMinGlobal().y - 1)
+	{
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pRoot->GetMaxGlobal().y, m_pCameraMngr->GetPosition().z));
+		m_pCameraMngr->SetTarget(vector3(m_pCameraMngr->GetPosition().x - .3f, m_pCameraMngr->GetPosition().y - 2.7f, m_pCameraMngr->GetPosition().z));
+
+	}
+		
+	if (m_pCameraMngr->GetPosition().z > m_pRoot->GetMaxGlobal().z + 1)
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y,  m_pRoot->GetMinGlobal().z));
+	if (m_pCameraMngr->GetPosition().z < m_pRoot->GetMinGlobal().z - 1)
+		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pCameraMngr->GetPosition().y, m_pRoot->GetMaxGlobal().z));
+
+#pragma endregion 
+
 	// handles player model positioning and basic collision
 	// detection and resetting of player when colliding
 	#pragma region PlayerAssignedCamPosition
 	// sets base player model on camera
 	// commented element used for creating object as crosshair for testing purposes
-	vector3 pos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f; 
+	vector3 pos = m_pCameraMngr->GetPosition() - m_pCameraMngr->GetForward()* .5f; 
 
 	vector3 v3Direction = m_pCameraMngr->GetForward();
 
-	// + m_pCameraMngr->GetForward() * 2;
-
-	//rotation attempt - have to fix/clean up
-	float fAngle = dot(AXIS_X, m_pCameraMngr->GetForward());
-	quaternion qRotation = glm::angleAxis(acos(fAngle), cross(AXIS_X, m_pCameraMngr->GetForward()));
-
-	matrix4 m4pos = glm::translate(pos) * ToMatrix4(qRotation) * glm::scale(vector3(.2f));
+	matrix4 m4pos = glm::translate(pos) * glm::scale(vector3(.2f));
 
 	m_pPlayer->SetModelMatrix(m4pos);
 	m_pPlayer->AddToRenderList();
@@ -99,7 +130,9 @@ void Application::Display(void)
 	{
 		if (m_pPlayer->GetRigidBody()->IsColliding(m_pEntityMngr->GetEntity(x)->GetRigidBody()))
 		{
-			m_pCameraMngr->SetPosition(vector3(0.f));
+			//m_pCameraMngr->SetPosition(vector3(0.f));
+			m_pCameraMngr->ResetCamera();
+			m_uLives--;
 		}
 	}
 	#pragma endregion

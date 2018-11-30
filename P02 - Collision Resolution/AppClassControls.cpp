@@ -22,19 +22,18 @@ void Application::ProcessMousePressed(sf::Event a_event)
 		// creates bullet if there is none
 	
 		// sets the start and end positions of bullet
-		if (m_pBullet == nullptr)
+		if (m_pBullet.size() < 6)
 		{
-			m_pBullet = new Bullet("Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f));
-
-
+			//m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MFBX\\Missile.fbx", "bullet", vector3(0, 0, -.1f)));
+			m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MOBJ\\Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f)));
+			
 			vector3 v3ForwardCam = glm::normalize(m_pCameraMngr->GetForward());
+	
+			m_pBullet.back()->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * .5 - m_pCameraMngr->GetUpward() * .2f;
 
-			m_pBullet->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * 2 - m_pCameraMngr->GetUpward() * .5f;
+			m_pBullet.back()->m_v3EndPos = m_pBullet.back()->m_v3StartPos + (v3ForwardCam) * (m_pBullet.back()->m_fRange * 3.f);
 
-			m_pBullet->m_v3EndPos = m_pBullet->m_v3StartPos + (v3ForwardCam) * (m_pBullet->m_fRange * 3.f);
-
-
-			fTimer = 0;
+			//m_pBullet.back()->fTimer = 0;
 		}
 		break;
 	case sf::Mouse::Button::Middle:
@@ -73,14 +72,14 @@ void Application::ProcessMouseReleased(sf::Event a_event)
 }
 void Application::ProcessMouseScroll(sf::Event a_event)
 {
-	gui.io.MouseWheel = a_event.mouseWheelScroll.delta;
-	float fSpeed = a_event.mouseWheelScroll.delta;
-	float fMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+	//gui.io.MouseWheel = a_event.mouseWheelScroll.delta;
+	//float fSpeed = a_event.mouseWheelScroll.delta;
+	//float fMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+	//	sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
-	if (fMultiplier)
-		fSpeed *= 2.0f;
-	m_pCameraMngr->MoveForward(-fSpeed);
+	//if (fMultiplier)
+	//	fSpeed *= 2.0f;
+	//m_pCameraMngr->MoveForward(-fSpeed);
 }
 //Keyboard
 void Application::ProcessKeyPressed(sf::Event a_event)
@@ -91,10 +90,10 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	case sf::Keyboard::Space:
 		m_sound.play();
 		break;
-	case sf::Keyboard::LShift:
-	case sf::Keyboard::RShift:
-		m_bModifier = true;
-		break;
+	//case sf::Keyboard::LShift:
+	//case sf::Keyboard::RShift:
+	//	m_bModifier = true;
+	//	break;
 	}
 
 	//gui
@@ -112,18 +111,18 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	case sf::Keyboard::Escape:
 		m_bRunning = false;
 		break;
-	case sf::Keyboard::F1:
-		m_pCameraMngr->SetCameraMode(CAM_PERSP);
-		break;
-	case sf::Keyboard::F2:
-		m_pCameraMngr->SetCameraMode(CAM_ORTHO_Z);
-		break;
-	case sf::Keyboard::F3:
-		m_pCameraMngr->SetCameraMode(CAM_ORTHO_Y);
-		break;
-	case sf::Keyboard::F4:
-		m_pCameraMngr->SetCameraMode(CAM_ORTHO_X);
-		break;
+	//case sf::Keyboard::F1:
+	//	m_pCameraMngr->SetCameraMode(CAM_PERSP);
+	//	break;
+	//case sf::Keyboard::F2:
+	//	m_pCameraMngr->SetCameraMode(CAM_ORTHO_Z);
+	//	break;
+	//case sf::Keyboard::F3:
+	//	m_pCameraMngr->SetCameraMode(CAM_ORTHO_Y);
+	//	break;
+	//case sf::Keyboard::F4:
+	//	m_pCameraMngr->SetCameraMode(CAM_ORTHO_X);
+	//	break;
 	case sf::Keyboard::F:
 		bFPSControl = !bFPSControl;
 		m_pCameraMngr->SetFPS(bFPSControl);
@@ -161,24 +160,24 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		break;
 
 	//test endgame condition checks - decrease object count (will be done on destruction of cubes) and decrease player health
-	case sf::Keyboard::O:
-		if (m_uObjects > 0) {
-			m_uObjects--;
-		}
-		break;
-	case sf::Keyboard::L:
-		if (m_uTimeLeft > 100) {
-			m_uTimeLeft -= 100;
-		}
-		break;
+	//case sf::Keyboard::O:
+	//	if (m_uObjects > 0) {
+	//		m_uObjects--;
+	//	}
+	//	break;
+	//case sf::Keyboard::L:
+	//	if (m_uTimeLeft > 100) {
+	//		m_uTimeLeft -= 100;
+	//	}
+	//	break;
 
 	case sf::Keyboard::Space:
 		m_bVisual = !m_bVisual;
 		break;
 		///
-	case sf::Keyboard::LShift:
-	case sf::Keyboard::RShift:
-		m_bModifier = false;
+	//case sf::Keyboard::LShift:
+	//case sf::Keyboard::RShift:
+	//	m_bModifier = false;
 	}
 
 	//gui
@@ -409,6 +408,7 @@ void Application::CameraRotation(float a_fSpeed)
 	{
 		fDeltaMouse = static_cast<float>(CenterX - MouseX);
 		fAngleY += fDeltaMouse * a_fSpeed;
+
 	}
 	else if (MouseX > CenterX)
 	{
@@ -427,8 +427,11 @@ void Application::CameraRotation(float a_fSpeed)
 		fAngleX += fDeltaMouse * a_fSpeed;
 	}
 	//Change the Yaw and the Pitch of the camera
-	m_pCameraMngr->ChangeYaw(fAngleY * 0.25f);
-	m_pCameraMngr->ChangePitch(-fAngleX * 0.25f);
+	m_pCameraMngr->ChangeYaw(fAngleY * 0.1f);
+	m_pCameraMngr->ChangePitch(-fAngleX * 0.1f);
+
+
+
 	SetCursorPos(CenterX, CenterY);//Position the mouse in the center
 }
 //Keyboard
@@ -441,13 +444,13 @@ void Application::ProcessKeyboard(void)
 	for discreet on/off use ProcessKeyboardPressed/Released
 	*/
 #pragma region Camera Position
-	bool bMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
-		sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
+	//bool bMultiplier = sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) ||
+	//	sf::Keyboard::isKeyPressed(sf::Keyboard::RShift);
 
 	float fMultiplier = 1.0f;
 
-	if (bMultiplier)
-		fMultiplier = 5.0f;
+	//if (bMultiplier)
+	//	fMultiplier = 5.0f;
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
 		m_pCameraMngr->MoveForward(m_fMovementSpeed * fMultiplier);

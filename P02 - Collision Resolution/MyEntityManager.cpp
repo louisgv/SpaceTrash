@@ -204,14 +204,21 @@ void Simplex::MyEntityManager::Update(void)
 	//check collisions
 	for (uint i = 0; i < m_uEntityCount - 1; i++)
 	{
+		//rotation for asteroids 
+		matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians(.2f), AXIS_X);
+		m_mEntityArray[i]->SetModelMatrix(m_mEntityArray[i]->GetModelMatrix() * m4Rotation);
+
 		for (uint j = i + 1; j < m_uEntityCount; j++)
 		{
-			if(m_mEntityArray[i] != nullptr && m_mEntityArray[j] != nullptr)
-				if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j]))
-				{
-					RemoveEntity(i);
-					RemoveEntity(j);
-				}
+
+			m_mEntityArray[i]->IsColliding(m_mEntityArray[j]);
+
+			//if(m_mEntityArray[i] != nullptr && m_mEntityArray[j] != nullptr)
+			//	if (m_mEntityArray[i]->IsColliding(m_mEntityArray[j]))
+			//	{
+			//		RemoveEntity(i);
+			//		//RemoveEntity(j);
+			//	}
 		}
 	}
 }

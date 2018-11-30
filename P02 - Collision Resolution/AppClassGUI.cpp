@@ -3,31 +3,48 @@ using namespace Simplex;
 ImGuiObject Application::gui;
 void Application::DrawGUI(void)
 {
+
 #pragma region Debugging Information
 	//Print info on the screen
 	uint nEmptyLines = 18;
-	for (uint i = 0; i < nEmptyLines; ++i)
+	for (uint i = 0; i < nEmptyLines; ++i) {
 		m_pMeshMngr->PrintLine("");//Add a line on top
+		if (i == 10)
+			m_pMeshMngr->PrintLine("                                   ><", C_BLUE_CORNFLOWER);//Add a line on top
+	}
 	//m_pMeshMngr->Print("						");
-	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), C_YELLOW);
+	//m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), C_YELLOW);
 	//m_pMeshMngr->Print("						");
 
 	//m_pMeshMngr->Print("						");
-
-	m_pMeshMngr->Print("Debris Remaining:");
-	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), C_RED);
+	vector3 color = C_RED;
+	m_pMeshMngr->Print("Asteroids:");
+	if (m_uObjects < 1)
+		color = C_BLUE_CORNFLOWER;
+	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), color);
 	m_pMeshMngr->Print("Time/Score:");
-	m_pMeshMngr->PrintLine(std::to_string(m_uTimeLeft), C_RED);
+	color = C_BLUE_CORNFLOWER;
+	if (m_uTimeLeft < 1)
+		color = C_RED;
+	m_pMeshMngr->PrintLine(std::to_string(m_uTimeLeft), color);
+	m_pMeshMngr->Print("Lives:");
+	color = C_BLUE_CORNFLOWER;
+	if (m_uLives < 1)
+		color = C_RED;
+	m_pMeshMngr->PrintLine(std::to_string(m_uLives), color);
 
-	m_pMeshMngr->Print("End Game Message:");
-	m_pMeshMngr->PrintLine(m_sEndGameMessage, C_RED);
+	//m_pMeshMngr->Print("End Game Message:");
+	color = C_BLUE_CORNFLOWER;
+	if (m_bEndGameLoss)
+		color = C_RED;
+	m_pMeshMngr->PrintLine(m_sEndGameMessage, color);
 
 #pragma endregion
 
 	//Calculate the window size to know how to draw
 	NewFrame();
 
-	static ImVec4 v4Color = ImColor(255, 0, 0);
+	static ImVec4 v4Color = ImColor(135, 206, 250);
 	ImGuiWindowFlags window_flags = ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoTitleBar;
 	//Main Window
 	if (m_bGUI_Main)
@@ -38,7 +55,6 @@ void Application::DrawGUI(void)
 		ImGui::Begin(sAbout.c_str(), (bool*)0, window_flags);
 		{
 			ImGui::TextColored(v4Color, m_sProjectName.c_str());
-
 			ImGui::Text("Programmers: \n");
 			ImGui::TextColored(v4Color, m_sProgrammers.c_str());
 			ImGui::Text("FrameRate: %.2f [FPS] -> %.3f [ms/frame]\n",
@@ -46,12 +62,15 @@ void Application::DrawGUI(void)
 			ImGui::Text("Levels in Octree: %d\n", m_uOctantLevels);
 			ImGui::Separator();
 			ImGui::Text("Control:\n");
-			ImGui::Text("   WASD: Movement\n");
-			ImGui::Text("    LMB: Shoot bullet\n");
+			ImGui::Text("  WASD/QE: Movement\n");
+			ImGui::Text("      LMB: Shoot\n");
+			ImGui::Text("      Esc: Exit\n");
+			ImGui::Text("      +/-: Inc/Dec Octant Levels\n");
+			ImGui::Text("PgUp/PgDn: Go Through Octants\n");
+			ImGui::Text("    Space: Hide/Show Octree\n");
 		}
 		ImGui::End();
 	}
-
 	// Rendering
 	ImGui::Render();
 
