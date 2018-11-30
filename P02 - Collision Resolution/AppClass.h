@@ -31,7 +31,8 @@ namespace Simplex
 		uint m_uPlayerIndex = 0;
 
 		MyEntity* m_pPlayer = nullptr;
-
+		MyEntity* m_pPlanet = nullptr;
+		uint m_planetCo = 5;
 		uint m_uLives;
 		bool m_bSingleHit = false;
 
