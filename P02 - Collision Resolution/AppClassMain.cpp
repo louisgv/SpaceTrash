@@ -27,10 +27,10 @@ sf::Image LoadImageFromResource(const std::string& name)
 Application::Application() {}
 Application::Application(Application const& input) {}
 Application& Application::operator=(Application const& input) { return *this; }
-Application::~Application(void) 
+Application::~Application(void)
 {
 	Release();
-	
+
 	//release controllers
 	ReleaseControllers();
 
@@ -162,7 +162,7 @@ void Application::Run(void)
 		{
 			Update();
 		}
-		
+
 		Display();
 	}
 
@@ -202,7 +202,7 @@ void Application::Init(String a_sApplicationName, int a_uSize, bool a_bFullscree
 	m_pSystem = SystemSingleton::GetInstance();
 	m_pSystem->SetWindowResolution(a_uSize);
 	Init(a_sApplicationName, m_pSystem->GetWindowWidth(), m_pSystem->GetWindowHeight(), a_bFullscreen, a_bBorderless);
-	
+
 	//Initializated flag
 	bInitializated = true;
 }
@@ -217,7 +217,7 @@ void Application::Init(String a_sApplicationName, uint a_uWidth, uint a_uHeight,
 	//Init System
 	m_pSystem = SystemSingleton::GetInstance();
 
-	if(a_sApplicationName == "")
+	if (a_sApplicationName == "")
 		m_pSystem->SetWindowName(m_pSystem->GetAppName());
 	else
 		m_pSystem->SetWindowName(a_sApplicationName);
@@ -230,20 +230,20 @@ void Application::Init(String a_sApplicationName, uint a_uWidth, uint a_uHeight,
 
 	// Set the clear color based on Microsoft's CornflowerBlue (default in XNA)
 	m_v4ClearColor = vector4(C_BLUE_CORNFLOWER, 1.0f);
-	
+
 	//Read configuration
 	ReadConfig(); // <<< the .ini file will have preference over programmer >>>
 
 	//Init GLFW Window
 	InitWindow(m_pSystem->GetWindowName());
-		
+
 	//Init Camera
 	m_pCameraMngr = CameraManager::GetInstance();
 	m_pCameraMngr->SetPositionTargetAndUpward(
 		vector3(0.0f, 2.5f, 15.0f),//Camera position
 		vector3(0.0f, 2.5f, 0.0f),//What I'm looking at
 		AXIS_Y);//What is up
-	
+
 	//Init Mesh Manager
 	m_pMeshMngr = MeshManager::GetInstance();
 
@@ -275,22 +275,22 @@ void Application::InitWindow(String a_sWindowName)
 
 	if (m_pSystem->IsWindowBorderless())
 		uStyle = sf::Style::None;
-	
+
 	if (m_pSystem->IsWindowFullscreen())
 		uStyle = sf::Style::Fullscreen;
-		
+
 	//If OpenGL 4.5 is not supported in the system glfw will warn you and determine the highest possible version
-	m_pWindow = new sf::Window(	sf::VideoMode(m_pSystem->GetWindowWidth(), m_pSystem->GetWindowHeight(), 32), //Window size
-								a_sWindowName, //window name
-								uStyle, //window style
-								sf::ContextSettings(	24, //depth buffer
-														0,	//stencil
-														0,	//Antialiasing
-														4,	//OpenGL Major
-														5,	//OpenGL Minor
-														0,	//Attributes
-														false //sRGB
-													)); //context settings
+	m_pWindow = new sf::Window(sf::VideoMode(m_pSystem->GetWindowWidth(), m_pSystem->GetWindowHeight(), 32), //Window size
+		a_sWindowName, //window name
+		uStyle, //window style
+		sf::ContextSettings(24, //depth buffer
+			0,	//stencil
+			0,	//Antialiasing
+			4,	//OpenGL Major
+			5,	//OpenGL Minor
+			0,	//Attributes
+			false //sRGB
+		)); //context settings
 	m_pWindow->setVerticalSyncEnabled(true);
 	m_pWindow->setFramerateLimit(m_pSystem->GetMaxFrameRate());
 	sf::Image icon = LoadImageFromResource("iconPNG");
@@ -455,7 +455,7 @@ void Application::WriteConfig(void)
 	fprintf(pFile, "\n# Resolution: [ 1680 x 1050 ]");
 	fprintf(pFile, "\n# Resolution: [ 1920 x 1080 ]");
 	fprintf(pFile, "\n# Resolution: [ 2560 x 1080 ]");
-	
+
 
 	fprintf(pFile, "\n\nAmbient: [%.2f,%.2f,%.2f]",
 		m_pLightMngr->GetColor(0).r, m_pLightMngr->GetColor(0).g, m_pLightMngr->GetColor(0).b);
@@ -510,9 +510,9 @@ void Simplex::Application::EndGame(void) {
 
 void Simplex::Application::BulletShoot(void) {
 	///
-	if (m_pBullet.size() != 0) 
+	if (m_pBullet.size() != 0)
 	{
-		for (uint q = 0; q < m_pBullet.size(); q++) 
+		for (uint q = 0; q < m_pBullet.size(); q++)
 		{
 			if (m_pBullet[q] != nullptr)
 			{
@@ -533,25 +533,25 @@ void Simplex::Application::BulletShoot(void) {
 				m_pBullet[q]->AddToRenderList();
 
 				// checks for collisions and deletes bullet and entity it collides with
-				for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++) 
+				for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
 				{
 					MyEntity* pEntity = m_pEntityMngr->GetEntity(x);
 
 					if (m_pBullet[q]->IsColliding(pEntity))
 					{
-						/*
+
 						MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
 						uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
 
 						for (uint i = 0; i < uAdjacentCount; i++)
 						{
-						if (m_uObjects > 0) {
-						m_uObjects--;
+							if (m_uObjects > 0) {
+								m_uObjects--;
+							}
+
+							m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
 						}
 
-						m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
-						}
-						*/
 
 						if (m_uObjects > 0) {
 							m_uObjects--;
@@ -580,7 +580,7 @@ void Simplex::Application::BulletShoot(void) {
 					//element = nullptr;
 				}
 			}
-			
+
 		}
 	}
 

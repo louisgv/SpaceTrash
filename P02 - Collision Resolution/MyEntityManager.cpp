@@ -17,34 +17,7 @@ void Simplex::MyEntityManager::Release(void)
 	m_uEntityCount = 0;
 	m_mEntityArray = nullptr;
 }
-void Simplex::MyEntityManager::AddEntity(Bullet* a_oBullet, String a_sUniqueID)
-{
-	Bullet* pTemp = a_oBullet;
 
-	//if I was able to generate it add it to the list
-	if (pTemp->IsInitialized())
-	{
-		//create a new temp array with one extra entry
-		PEntity* tempArray = new PEntity[m_uEntityCount + 1];
-		//start from 0 to the current count
-		uint uCount = 0;
-		for (uint i = 0; i < m_uEntityCount; ++i)
-		{
-			tempArray[uCount] = m_mEntityArray[i];
-			++uCount;
-		}
-		tempArray[uCount] = pTemp;
-		//if there was an older array delete
-		if (m_mEntityArray)
-		{
-			delete[] m_mEntityArray;
-		}
-		//make the member pointer the temp pointer
-		m_mEntityArray = tempArray;
-		//add one entity to the count
-		++m_uEntityCount;
-	}
-}
 Simplex::MyEntityManager* Simplex::MyEntityManager::GetInstance()
 {
 	if(m_pInstance == nullptr)
@@ -250,6 +223,34 @@ void Simplex::MyEntityManager::AddEntity(String a_sFileName, String a_sUniqueID)
 		++m_uEntityCount;
 	}
 }
+
+void Simplex::MyEntityManager::AddEntity(MyEntity * pTemp)
+{
+	//if I was able to generate it add it to the list
+	if (pTemp->IsInitialized())
+	{
+		//create a new temp array with one extra entry
+		PEntity* tempArray = new PEntity[m_uEntityCount + 1];
+		//start from 0 to the current count
+		uint uCount = 0;
+		for (uint i = 0; i < m_uEntityCount; ++i)
+		{
+			tempArray[uCount] = m_mEntityArray[i];
+			++uCount;
+		}
+		tempArray[uCount] = pTemp;
+		//if there was an older array delete
+		if (m_mEntityArray)
+		{
+			delete[] m_mEntityArray;
+		}
+		//make the member pointer the temp pointer
+		m_mEntityArray = tempArray;
+		//add one entity to the count
+		++m_uEntityCount;
+	}
+}
+
 void Simplex::MyEntityManager::RemoveEntity(uint a_uIndex)
 {
 	//if the list is empty return

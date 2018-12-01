@@ -282,9 +282,202 @@ void MyRigidBody::ClearCollidingList(void)
 }
 uint MyRigidBody::SAT(MyRigidBody* const a_pOther)
 {
+	uint output = 0;
 
-	//there is no axis test that separates this two objects
+	vector3 v3GlobalOffset = a_pOther->GetCenterGlobal() - GetCenterGlobal();
+	// Bring offset into our local frame
+	v3GlobalOffset = vector3(vector4(v3GlobalOffset, 0.0f) * m_m4ToWorld);
+
+	std::vector<vector3> pOurAxisList = GetAxis();
+	std::vector<vector3> pTheirAxisList = a_pOther->GetAxis();
+
+	vector3 v3OurExtend = GetHalfWidth();
+	vector3 v3TheirExtend = a_pOther->GetHalfWidth();
+
+	float fOurRadii, fTheirRadii;
+	matrix4 mTheirCoordToOur, mTheirCoordToOurTransposed,
+		mAdjustedTransform, mAdjustedTransformTranposed;
+
+	// Compute rotation matrix expressing b in a's coordinate frame
+
+	// Compute common subexpressions. Add in an epsilon term to
+	// counteract arithmetic errors when two edges are parallel and
+	// their cross product is (near) null (see text for details)
+	for (int i = 0; i < 3; i++) {
+		for (int j = 0; j < 3; j++) {
+			mTheirCoordToOur[i][j] = glm::dot(pOurAxisList[i], pTheirAxisList[j]);
+			mAdjustedTransform[i][j] = glm::abs(mTheirCoordToOur[i][j]) + FLT_EPSILON;
+		}
+
+	}
+	mTheirCoordToOurTransposed = glm::transpose(mTheirCoordToOur);
+
+	mAdjustedTransformTranposed = glm::transpose(mAdjustedTransform);
+
+	/*
+		Axes parallel to face normals of object A
+
+			SAT_AX,
+			SAT_AY,
+			SAT_AZ,
+	*/
+	for (int i = 0; i < 3; i++) {
+		fOurRadii = v3OurExtend[i];
+		fTheirRadii = glm::dot(v3TheirExtend, vector3(mAdjustedTransform[i]));
+
+		output++;
+		if (glm::abs(v3GlobalOffset[i]) > fOurRadii + fTheirRadii) return output;
+	}
+
+
+	/*
+		Axes parallel to face normals of object B
+
+			SAT_BX,
+			SAT_BY,
+			SAT_BZ,
+	*/
+
+	for (int i = 0; i < 3; i++) {
+
+		output++;
+
+		fOurRadii = glm::dot(v3OurExtend, vector3(mAdjustedTransformTranposed[i]));
+		fTheirRadii = v3TheirExtend[i];
+
+		if (glm::abs(glm::dot(v3GlobalOffset, vector3(mTheirCoordToOurTransposed[i]))) > fOurRadii + fTheirRadii) return output;
+	}
+
+	/*
+		Axes parallel to the vectors resulting from the cross products of all edges in
+			A with all edges in B
+	*/
+
+	/*
+		SAT_AXxBX,
+		SAT_AXxBY,
+		SAT_AXxBZ,
+
+		SAT_AYxBX,
+		SAT_AYxBY,
+		SAT_AYxBZ,
+
+		SAT_AZxBX,
+		SAT_AZxBY,
+		SAT_AZxBZ,
+	*/
+
+	// Test axis L = A0 x B0
+	output++;
+	fOurRadii = v3OurExtend[1] * mAdjustedTransform[2][0] + v3OurExtend[2] * mAdjustedTransform[1][0];
+	fTheirRadii = v3TheirExtend[1] * mAdjustedTransform[0][2] + v3TheirExtend[2] * mAdjustedTransform[0][1];
+	if (glm::abs(v3GlobalOffset[2] * mTheirCoordToOur[1][0] - v3GlobalOffset[1] * mTheirCoordToOur[2][0]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A0 x B1
+	output++;
+	fOurRadii = v3OurExtend[1] * mAdjustedTransform[2][1] + v3OurExtend[2] * mAdjustedTransform[1][1];
+	fTheirRadii = v3TheirExtend[0] * mAdjustedTransform[0][2] + v3TheirExtend[2] * mAdjustedTransform[0][0];
+	if (glm::abs(v3GlobalOffset[2] * mTheirCoordToOur[1][1] - v3GlobalOffset[1] * mTheirCoordToOur[2][1]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A0 x B2
+	output++;
+	fOurRadii = v3OurExtend[1] * mAdjustedTransform[2][2] + v3OurExtend[2] * mAdjustedTransform[1][2];
+	fTheirRadii = v3TheirExtend[0] * mAdjustedTransform[0][1] + v3TheirExtend[1] * mAdjustedTransform[0][0];
+	if (glm::abs(v3GlobalOffset[2] * mTheirCoordToOur[1][2] - v3GlobalOffset[1] * mTheirCoordToOur[2][2]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A1 x B0
+	output++;
+	fOurRadii = v3OurExtend[0] * mAdjustedTransform[2][0] + v3OurExtend[2] * mAdjustedTransform[0][0];
+	fTheirRadii = v3TheirExtend[1] * mAdjustedTransform[1][2] + v3TheirExtend[2] * mAdjustedTransform[1][1];
+	if (glm::abs(v3GlobalOffset[0] * mTheirCoordToOur[2][0] - v3GlobalOffset[2] * mTheirCoordToOur[0][0]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A1 x B1
+	output++;
+	fOurRadii = v3OurExtend[0] * mAdjustedTransform[2][1] + v3OurExtend[2] * mAdjustedTransform[0][1];
+	fTheirRadii = v3TheirExtend[0] * mAdjustedTransform[1][2] + v3TheirExtend[2] * mAdjustedTransform[1][0];
+	if (glm::abs(v3GlobalOffset[0] * mTheirCoordToOur[2][1] - v3GlobalOffset[2] * mTheirCoordToOur[0][1]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A1 x B2
+	output++;
+	fOurRadii = v3OurExtend[0] * mAdjustedTransform[2][2] + v3OurExtend[2] * mAdjustedTransform[0][2];
+	fTheirRadii = v3TheirExtend[0] * mAdjustedTransform[1][1] + v3TheirExtend[1] * mAdjustedTransform[1][0];
+	if (glm::abs(v3GlobalOffset[0] * mTheirCoordToOur[2][2] - v3GlobalOffset[2] * mTheirCoordToOur[0][2]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A2 x B0
+	output++;
+	fOurRadii = v3OurExtend[0] * mAdjustedTransform[1][0] + v3OurExtend[1] * mAdjustedTransform[0][0];
+	fTheirRadii = v3TheirExtend[1] * mAdjustedTransform[2][2] + v3TheirExtend[2] * mAdjustedTransform[2][1];
+	if (glm::abs(v3GlobalOffset[1] * mTheirCoordToOur[0][0] - v3GlobalOffset[0] * mTheirCoordToOur[1][0]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A2 x B1
+	output++;
+	fOurRadii = v3OurExtend[0] * mAdjustedTransform[1][1] + v3OurExtend[1] * mAdjustedTransform[0][1];
+	fTheirRadii = v3TheirExtend[0] * mAdjustedTransform[2][2] + v3TheirExtend[2] * mAdjustedTransform[2][0];
+	if (glm::abs(v3GlobalOffset[1] * mTheirCoordToOur[0][1] - v3GlobalOffset[0] * mTheirCoordToOur[1][1]) > fOurRadii + fTheirRadii)
+		return output;
+
+	// Test axis L = A2 x B2
+	output++;
+	fOurRadii = v3OurExtend[0] * mAdjustedTransform[1][2] + v3OurExtend[1] * mAdjustedTransform[0][2];
+	fTheirRadii = v3TheirExtend[0] * mAdjustedTransform[2][1] + v3TheirExtend[1] * mAdjustedTransform[2][0];
+	if (glm::abs(v3GlobalOffset[1] * mTheirCoordToOur[0][2] - v3GlobalOffset[0] * mTheirCoordToOur[1][2]) > fOurRadii + fTheirRadii)
+		return output;
+
+	return eSATResults::SAT_NONE;
+
 	return 0;
+}
+
+
+void MyRigidBody::SetMinMaxInclusive(float * a_pValue, float* a_pMax, float* a_pMin) {
+	float value = *a_pValue;
+	if (*a_pMax < value) {
+		*a_pMax = value;
+	}
+	if (*a_pMin > value) {
+		*a_pMin = value;
+	}
+}
+
+void MyRigidBody::SetMinMaxExclusive(float * a_pValue, float* a_pMax, float* a_pMin) {
+	float value = *a_pValue;
+	a_pValue = (*a_pMax < value) ? a_pMax : (*a_pMin > value) ? a_pMin : nullptr;
+
+	if (a_pValue != nullptr) {
+		*a_pValue = value;
+	}
+}
+
+std::vector<vector3> MyRigidBody::GetBoxCorner(vector3* a_v3Min, vector3* a_v3Max) {
+	std::vector<vector3> v3Corner = {
+		*a_v3Min,
+		vector3(a_v3Max->x, a_v3Max->y, a_v3Max->z),
+		vector3(a_v3Max->x, a_v3Min->y, a_v3Max->z),
+		vector3(a_v3Max->x, a_v3Min->y, a_v3Min->z),
+
+		vector3(a_v3Min->x, a_v3Max->y, a_v3Min->z),
+		vector3(a_v3Min->x, a_v3Min->y, a_v3Min->z),
+		vector3(a_v3Min->x, a_v3Max->y, a_v3Max->z),
+		*a_v3Max
+	};
+	return v3Corner;
+}
+
+std::vector<vector3> MyRigidBody::GetAxis() {
+
+	std::vector<vector3> v3Axis = {
+		(vector3(m_m4ToWorld * vector4(AXIS_X, 0.0f))),
+		(vector3(m_m4ToWorld * vector4(AXIS_Y, 0.0f))),
+		(vector3(m_m4ToWorld * vector4(AXIS_Z, 0.0f)))
+	};
+	return v3Axis;
 }
 
 uint Simplex::MyRigidBody::GetCollisionCount() {
@@ -314,23 +507,25 @@ bool MyRigidBody::IsColliding(MyRigidBody* const a_pOther)
 				bColliding = false;
 			}
 		}
+		auto result = SAT(a_pOther);
 
-		if (bColliding) //they are colliding with bounding box also
-		{
-			this->AddCollisionWith(a_pOther);
-			a_pOther->AddCollisionWith(this);
-		}
-		else //they are not colliding with bounding box
-		{
-			this->RemoveCollisionWith(a_pOther);
-			a_pOther->RemoveCollisionWith(this);
-		}
+		// std::cout << result << std::endl;
+
+		if (result != eSATResults::SAT_NONE)
+			bColliding = false;// reset to false
+	}	
+
+	if (bColliding) //they are colliding with bounding box also
+	{
+		this->AddCollisionWith(a_pOther);
+		a_pOther->AddCollisionWith(this);
 	}
-	else //they are not colliding with bounding sphere
+	else //they are not colliding with bounding box
 	{
 		this->RemoveCollisionWith(a_pOther);
 		a_pOther->RemoveCollisionWith(this);
 	}
+
 	return bColliding;
 }
 
