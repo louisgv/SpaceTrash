@@ -6,6 +6,9 @@ Date: 2017/06
 #define __MYRIGIDBODY_H_
 
 #include "Simplex\Mesh\Model.h"
+#include "Simplex\Simplex.h"
+
+#define FLOATZEROTHRESHOLD .00001f
 
 namespace Simplex
 {
@@ -111,6 +114,25 @@ public:
 	OUTPUT: are they colliding?
 	*/
 	bool IsColliding(MyRigidBody* const other);
+	
+	/*
+	Usage: Set the min or max value based on the pointer
+	Arguments:
+	Output: ---
+	*/
+	void MyRigidBody::SetMinMaxExclusive(float * a_pValue, float* a_pMax, float* a_pMin);
+	/*
+	Usage: Get the box coordinate of all corners given min and max
+	Arguments:
+	Output: An array of the coordinate of the bounding box. Make sure to delete it after use
+	*/
+	std::vector<vector3> GetBoxCorner(vector3 * a_v3Min, vector3 * a_v3Max);
+	/*
+	Usage: Get the three basic axis. Make sure to delete them once done
+	Arguments:
+	Output: ---
+	*/
+	std::vector<vector3> GetAxis();
 
 #pragma region Accessors
 	/*
@@ -254,6 +276,13 @@ public:
 	OUTPUT:
 	*/
 	MyRigidBody** GetCollidingRigidBodies();
+
+	/*
+	Usage: Set min and max value based on the pointer
+	Arguments:
+	Output: ---
+	*/
+	void SetMinMaxInclusive(float * a_pValue, float * a_pMax, float * a_pMin);
 
 private:
 	/*

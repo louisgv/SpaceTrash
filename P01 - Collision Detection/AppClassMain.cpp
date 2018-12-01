@@ -545,7 +545,7 @@ void Simplex::Application::BulletShoot(void) {
 
 			if (m_pBullet->IsColliding(pEntity))
 			{
-				/*
+				
 				MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
 				uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
 
@@ -557,7 +557,7 @@ void Simplex::Application::BulletShoot(void) {
 
 					m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
 				}
-				*/
+				
 
 				if (m_uObjects > 0) {
 					m_uObjects--;

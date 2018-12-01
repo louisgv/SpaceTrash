@@ -47,15 +47,18 @@ void Application::InitVariables(void)
 			m_pEntityMngr->SetModelMatrix(m4Position);
 		}
 	}
-	m_uOctantLevels = 2;
-	m_pRoot = new MyOctant(m_uOctantLevels, 5);
 
 	/// player set up
 	//m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
 	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03A_Moon.obj", "Player");
+	// m_pEntityMngr->AddEntity(m_pPlayer);
 	///
-	m_pPlanet = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03_Earth.obj", "Player");
-	
+	m_pPlanet = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03_Earth.obj", "Planet");
+	// m_pEntityMngr->AddEntity(m_pPlanet);
+
+	m_uOctantLevels = 2;
+	m_pRoot = new MyOctant(m_uOctantLevels, 5);
+
 	m_pEntityMngr->Update();
 }
 void Application::Update(void)
@@ -105,13 +108,11 @@ void Application::Display(void)
 	{
 		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pRoot->GetMinGlobal().y, m_pCameraMngr->GetPosition().z));
 		m_pCameraMngr->SetTarget(vector3(m_pCameraMngr->GetPosition().x - .3f, m_pCameraMngr->GetPosition().y + 2.7f, m_pCameraMngr->GetPosition().z));
-
 	}
 	if (m_pCameraMngr->GetPosition().y < m_pRoot->GetMinGlobal().y - 1)
 	{
 		m_pCameraMngr->SetPosition(vector3(m_pCameraMngr->GetPosition().x, m_pRoot->GetMaxGlobal().y, m_pCameraMngr->GetPosition().z));
 		m_pCameraMngr->SetTarget(vector3(m_pCameraMngr->GetPosition().x - .3f, m_pCameraMngr->GetPosition().y - 2.7f, m_pCameraMngr->GetPosition().z));
-
 	}
 		
 	if (m_pCameraMngr->GetPosition().z > m_pRoot->GetMaxGlobal().z + 1)

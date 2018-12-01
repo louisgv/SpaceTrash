@@ -6,7 +6,6 @@ namespace Simplex
 	{
 		// sets velocity
 		m_v3Velocity = a_v3Velocity;
-		m_fSpeed = 3;//glm::length(m_v3Velocity);
 		fTimer = 0.0f;
 	}
 	Bullet::~Bullet()

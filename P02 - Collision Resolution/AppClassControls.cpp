@@ -29,15 +29,21 @@ void Application::ProcessMousePressed(sf::Event a_event)
 		if (shoot)
 		{
 			//m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MFBX\\Missile.fbx", "bullet", vector3(0, 0, -.1f)));
-			m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MOBJ\\Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f)));
+
+			Bullet* pBullet = new Bullet("..\\_Binary\\Data\\MOBJ\\Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f));
+
+			m_pBullet.push_back(pBullet);
 			
 			vector3 v3ForwardCam = glm::normalize(m_pCameraMngr->GetForward());
 	
-			m_pBullet.back()->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * .5 - m_pCameraMngr->GetUpward() * .2f;
+			pBullet->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * .5 - m_pCameraMngr->GetUpward() * .2f;
 
-			m_pBullet.back()->m_v3EndPos = m_pBullet.back()->m_v3StartPos + (v3ForwardCam) * (m_pBullet.back()->m_fRange * 3.f);
+			pBullet->m_v3EndPos = pBullet->m_v3StartPos + (v3ForwardCam) * (pBullet->m_fRange * 3.f);
 
 			m_sound.play();
+
+			// m_pEntityMngr->AddEntity(pBullet);
+
 			//m_pBullet.back()->fTimer = 0;
 		}
 		break;
