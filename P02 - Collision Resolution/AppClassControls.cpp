@@ -13,16 +13,20 @@ void Application::ProcessMouseMovement(sf::Event a_event)
 	gui.io.MousePos = ImVec2(m_v3Mouse.x, m_v3Mouse.y);
 }
 void Application::ProcessMousePressed(sf::Event a_event)
-{
+{		
+	bool shoot = true;
 	switch (a_event.mouseButton.button)
 	{
 	default: break;
 	case sf::Mouse::Button::Left:
 		gui.m_bMousePressed[0] = true;
 		// creates bullet if there is none
-	
+
+		if (m_pBullet.size() >= 6 && !m_bSingleHit) {
+			shoot = false;
+		}
 		// sets the start and end positions of bullet
-		if (m_pBullet.size() < 6)
+		if (shoot)
 		{
 			//m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MFBX\\Missile.fbx", "bullet", vector3(0, 0, -.1f)));
 			m_pBullet.push_back(new Bullet("..\\_Binary\\Data\\MOBJ\\Planets\\00_Sun.obj", "bullet", vector3(0, 0, -.1f)));
@@ -33,12 +37,17 @@ void Application::ProcessMousePressed(sf::Event a_event)
 
 			m_pBullet.back()->m_v3EndPos = m_pBullet.back()->m_v3StartPos + (v3ForwardCam) * (m_pBullet.back()->m_fRange * 3.f);
 
+			m_sound.play();
 			//m_pBullet.back()->fTimer = 0;
 		}
 		break;
 	case sf::Mouse::Button::Middle:
 		gui.m_bMousePressed[1] = true;
-		m_bArcBall = true;
+		//show/hide boxes on asteroids
+		for (uint i = 0; i < m_pEntityMngr->GetEntityCount(); i++) {
+			bool a_bVisibility = m_pEntityMngr->GetEntity(i)->GetRigidBody()->GetVisibleOBB();
+			m_pEntityMngr->GetEntity(i)->GetRigidBody()->SetVisibleOBB(!a_bVisibility);
+		}
 		break;
 	case sf::Mouse::Button::Right:
 		gui.m_bMousePressed[2] = true;
@@ -88,7 +97,7 @@ void Application::ProcessKeyPressed(sf::Event a_event)
 	{
 	default: break;
 	case sf::Keyboard::Space:
-		m_sound.play();
+		//m_sound.play();
 		break;
 	//case sf::Keyboard::LShift:
 	//case sf::Keyboard::RShift:
@@ -126,6 +135,10 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	case sf::Keyboard::F:
 		bFPSControl = !bFPSControl;
 		m_pCameraMngr->SetFPS(bFPSControl);
+		break;
+	//toggle single-hit bullets
+	case sf::Keyboard::R:
+		m_bSingleHit = !m_bSingleHit;
 		break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;

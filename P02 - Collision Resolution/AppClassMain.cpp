@@ -557,12 +557,17 @@ void Simplex::Application::BulletShoot(void) {
 							m_uObjects--;
 						}
 
+						m_soundTwo.play();
+
 						m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
 
-						//if we want bullets to hit one and be done
-						//SafeDelete(m_pBullet[q]);
-						//m_pBullet.pop_front();
-						//return;
+						if (m_bSingleHit) {
+							//if we want bullets to hit one and be done
+							SafeDelete(m_pBullet[q]);
+							m_pBullet.pop_front();
+							return;
+						}
+
 					}
 				}
 

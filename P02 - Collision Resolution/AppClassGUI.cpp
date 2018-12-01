@@ -64,10 +64,13 @@ void Application::DrawGUI(void)
 			ImGui::Text("Control:\n");
 			ImGui::Text("  WASD/QE: Movement\n");
 			ImGui::Text("      LMB: Shoot\n");
+			ImGui::Text("      RMB: Rotate Camera\n");
 			ImGui::Text("      Esc: Exit\n");
 			ImGui::Text("      +/-: Inc/Dec Octant Levels\n");
 			ImGui::Text("PgUp/PgDn: Go Through Octants\n");
-			ImGui::Text("    Space: Hide/Show Octree\n");
+			ImGui::Text("    Space: Toggle Octree Display\n");
+			ImGui::Text("Mid Mouse: Toggle OBB Display");
+			ImGui::Text("        R: Toggle 1-Hit Bullets");
 		}
 		ImGui::End();
 	}

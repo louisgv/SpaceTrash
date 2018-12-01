@@ -11,13 +11,22 @@ void Application::InitVariables(void)
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 #ifdef DEBUG
-	uint uInstances = 100;
-	m_uTimeLeft = uInstances * 60;
-	// m_fSphereRadius = 10.f;
+	uint uInstances = 20;
+	m_uTimeLeft = uInstances * 100;
+	m_planetCo = 5;
 #else
-	uint uInstances = 100;
-	m_uTimeLeft = uInstances * 60;
+	uint uInstances = 2000;
+	m_uTimeLeft = 11000;
+	m_planetCo = 100;
 #endif
+
+	//sound stuff
+	m_soundBuffer.loadFromFile("..\\_Binary\\Data\\Audio\\Lazer02.wav");
+	m_soundBufferTwo.loadFromFile("..\\_Binary\\Data\\Audio\\LowCrash.wav");
+	m_sound.setBuffer(m_soundBuffer);
+	m_soundTwo.setBuffer(m_soundBufferTwo);
+	m_sound.setVolume(30.0f);
+	m_soundTwo.setVolume(75.0f);
 
 	m_uLives = 3;
 	int nSquare = static_cast<int>(std::sqrt(uInstances));
@@ -45,6 +54,7 @@ void Application::InitVariables(void)
 	//m_pPlayer = new MyEntity("..\\_Binary\\Data\\MFBX\\SpaceShip.fbx", "Player");
 	m_pPlayer = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03A_Moon.obj", "Player");
 	///
+	m_pPlanet = new MyEntity("..\\_Binary\\Data\\MOBJ\\Planets\\03_Earth.obj", "Player");
 	
 	m_pEntityMngr->Update();
 }
@@ -113,7 +123,7 @@ void Application::Display(void)
 
 	// handles player model positioning and basic collision
 	// detection and resetting of player when colliding
-	#pragma region PlayerAssignedCamPosition
+#pragma region PlayerAssignedCamPosition
 	// sets base player model on camera
 	// commented element used for creating object as crosshair for testing purposes
 	vector3 pos = m_pCameraMngr->GetPosition() - m_pCameraMngr->GetForward()* .5f; 
@@ -132,10 +142,17 @@ void Application::Display(void)
 		{
 			//m_pCameraMngr->SetPosition(vector3(0.f));
 			m_pCameraMngr->ResetCamera();
+			m_soundTwo.play();
 			m_uLives--;
 		}
 	}
-	#pragma endregion
+#pragma endregion
+
+	//planet position
+	vector3 posP = vector3(m_pRoot->GetMaxGlobal().x / 2, m_pRoot->GetMaxGlobal().y / 2, m_uTimeLeft/m_planetCo + 80);
+	matrix4 m4posP = glm::translate(posP) * glm::scale(vector3(35.0f));
+	m_pPlanet->SetModelMatrix(m4posP);
+	m_pPlanet->AddToRenderList();
 
 	if (m_bVisual)
 	{
@@ -163,6 +180,10 @@ void Application::Display(void)
 }
 void Application::Release(void)
 {
+	SafeDelete(m_pPlayer);
+	SafeDelete(m_pPlanet);
+	SafeDelete(m_pRoot);
+	m_pBullet.clear();
 	//release GUI
 	ShutdownGUI();
 }
