@@ -38,7 +38,7 @@ void Application::ProcessMousePressed(sf::Event a_event)
 	
 			pBullet->m_v3StartPos = m_pCameraMngr->GetPosition() + m_pCameraMngr->GetForward() * .5 - m_pCameraMngr->GetUpward() * .2f;
 
-			pBullet->m_v3EndPos = pBullet->m_v3StartPos + (v3ForwardCam) * (pBullet->m_fRange * 3.f);
+			pBullet->m_v3EndPos = pBullet->m_v3StartPos + (v3ForwardCam) * (pBullet->m_fRange * 2.f);
 
 			m_sound.play();
 

@@ -528,7 +528,7 @@ void Simplex::Application::BulletShoot(void) {
 				// sets current position based on lerp
 				vector3 v3CurrentPos = glm::lerp(m_pBullet[q]->m_v3StartPos, m_pBullet[q]->m_v3EndPos, fPercentage);
 				//basic rotation to start - 180 around y
-				matrix4 m4BulletModel = glm::translate(v3CurrentPos) * glm::scale(vector3(.2f));;
+				matrix4 m4BulletModel = glm::translate(v3CurrentPos) * glm::scale(vector3(.1f));;
 				m_pBullet[q]->SetModelMatrix(m4BulletModel);
 				m_pBullet[q]->AddToRenderList();
 

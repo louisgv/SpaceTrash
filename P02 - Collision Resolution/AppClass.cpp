@@ -11,7 +11,7 @@ void Application::InitVariables(void)
 	m_pLightMngr->SetPosition(vector3(0.0f, 3.0f, 13.0f), 1); //set the position of first light (0 is reserved for ambient light)
 
 #ifdef DEBUG
-	uint uInstances = 20;
+	uint uInstances = 300;
 	m_uTimeLeft = uInstances * 100;
 	m_planetCo = 5;
 #else
