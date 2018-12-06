@@ -184,7 +184,18 @@ void Application::Release(void)
 	SafeDelete(m_pPlayer);
 	SafeDelete(m_pPlanet);
 	SafeDelete(m_pRoot);
-	m_pBullet.clear();
+	//m_pBullet.clear();
+	if (m_pBullet.size() != 0)
+	{
+		for (uint q = 0; q < m_pBullet.size(); q++)
+		{
+			if (m_pBullet[q] != nullptr)
+			{
+				SafeDelete(m_pBullet[q]);
+			}
+		}
+	}
+
 	//release GUI
 	ShutdownGUI();
 }

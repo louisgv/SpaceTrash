@@ -146,6 +146,10 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 	case sf::Keyboard::R:
 		m_bSingleHit = !m_bSingleHit;
 		break;
+	//toggle chain reaction
+	case sf::Keyboard::T:
+		m_bChain = !m_bChain;
+		break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;
 		if (m_uOctantID >= m_pRoot->GetOctantCount())
