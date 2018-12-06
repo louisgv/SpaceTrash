@@ -71,6 +71,9 @@ void Application::DrawGUI(void)
 			ImGui::Text("    Space: Toggle Octree Display\n");
 			ImGui::Text("Mid Mouse: Toggle OBB Display");
 			ImGui::Text("        R: Toggle 1-Hit Bullets");
+			ImGui::Text("        T: Toggle Chain Reaction");
+
+
 		}
 		ImGui::End();
 	}

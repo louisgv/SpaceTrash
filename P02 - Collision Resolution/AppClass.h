@@ -35,6 +35,7 @@ namespace Simplex
 		uint m_planetCo = 5;
 		uint m_uLives;
 		bool m_bSingleHit = false;
+		bool m_bChain = true;
 
 	  ///
 	private:

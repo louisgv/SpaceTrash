@@ -539,19 +539,19 @@ void Simplex::Application::BulletShoot(void) {
 
 					if (m_pBullet[q]->IsColliding(pEntity))
 					{
+						if (m_bChain) {
+							MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
+							uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
 
-						MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
-						uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
+							for (uint i = 0; i < uAdjacentCount; i++)
+							{
+								if (m_uObjects > 0) {
+									m_uObjects--;
+								}
 
-						for (uint i = 0; i < uAdjacentCount; i++)
-						{
-							if (m_uObjects > 0) {
-								m_uObjects--;
+								m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
 							}
-
-							m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
 						}
-
 
 						if (m_uObjects > 0) {
 							m_uObjects--;
