@@ -27,6 +27,7 @@ namespace Simplex
 		uint m_uOctantLevels = 0; //Number of levels in the octree
 		///
 		std::deque<Bullet*> m_pBullet;
+		std::deque<Rock*> m_pFlyaways;
 
 		uint m_uPlayerIndex = 0;
 
@@ -34,13 +35,13 @@ namespace Simplex
 		MyEntity* m_pPlanet = nullptr;
 		uint m_planetCo = 5;
 		uint m_uLives;
-		bool m_bSingleHit = false;
-		bool m_bChain = true;
+		bool m_bSingleHit = true;
+		bool m_bChain = false;
 
 	  ///
 	private:
 
-		String m_sProjectName = "SpaceTrash - Milestone 3";
+		String m_sProjectName = "SpaceTrash - Final";
 		String m_sProgrammers = "\tLab N - lab@mail.rit.edu\n\tKyle F - kmf7094@g.rit.edu\n\tElliot P - ejp4604@rit.edu"; //programmer
 
 		float m_fSphereRadius = 20.f;
@@ -220,6 +221,8 @@ namespace Simplex
 		void ReleaseControllers(void);
 		//check/run bullet
 		void BulletShoot(void);
+		//update flyaway asteroids
+		void Flyaways(void);
 #pragma endregion
 
 #pragma region Application Controls

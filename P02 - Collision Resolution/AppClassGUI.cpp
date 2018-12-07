@@ -22,15 +22,21 @@ void Application::DrawGUI(void)
 	if (m_uObjects < 1)
 		color = C_BLUE_CORNFLOWER;
 	m_pMeshMngr->PrintLine(std::to_string(m_uObjects), color);
-	m_pMeshMngr->Print("Time/Score:");
+	m_pMeshMngr->Print("Time:");
 	color = C_BLUE_CORNFLOWER;
 	if (m_uTimeLeft < 1)
 		color = C_RED;
+	if (m_uTimeLeft < 1 || m_uTimeLeft > 20000 || m_uLives < 1 || m_uLives > 4) {
+		m_uTimeLeft = 0;
+	}
 	m_pMeshMngr->PrintLine(std::to_string(m_uTimeLeft), color);
 	m_pMeshMngr->Print("Lives:");
 	color = C_BLUE_CORNFLOWER;
 	if (m_uLives < 1)
 		color = C_RED;
+	if (m_uLives < 1 || m_uLives > 4) {
+		m_uLives == 0;
+	}
 	m_pMeshMngr->PrintLine(std::to_string(m_uLives), color);
 
 	//m_pMeshMngr->Print("End Game Message:");
@@ -70,8 +76,8 @@ void Application::DrawGUI(void)
 			ImGui::Text("PgUp/PgDn: Go Through Octants\n");
 			ImGui::Text("    Space: Toggle Octree Display\n");
 			ImGui::Text("Mid Mouse: Toggle OBB Display");
-			ImGui::Text("        R: Toggle 1-Hit Bullets");
-			ImGui::Text("        T: Toggle Chain Reaction");
+			//ImGui::Text("        R: Toggle 1-Hit Bullets");
+			//ImGui::Text("        T: Toggle Chain Reaction");
 
 
 		}

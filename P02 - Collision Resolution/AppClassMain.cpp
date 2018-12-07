@@ -508,6 +508,63 @@ void Simplex::Application::EndGame(void) {
 	m_bUpdate = false;
 }
 
+void Simplex::Application::Flyaways(void) {
+	//update flyaway asteroids that were hit with bullet
+	if (m_pFlyaways.size() > 0)
+	{
+		for (uint h = 0; h < m_pFlyaways.size(); h++)
+		{
+			if (m_pFlyaways[h] != nullptr)
+			{
+				m_pFlyaways[h]->fTimer += .03f;
+
+				// maps the values to be between 0 & 1
+				float fPercentage = MapValue(m_pFlyaways[h]->fTimer, 0.0f, m_pFlyaways[h]->m_fSpeed, 0.0f, 1.0f);
+
+				// sets current position based on lerp
+				vector3 v3CurrentP = glm::lerp(m_pFlyaways[h]->m_v3StartPos, m_pFlyaways[h]->m_v3EndPos, fPercentage);
+
+				matrix4 m4FlyModel = glm::translate(v3CurrentP) * glm::scale(vector3(.45f));;
+				m_pFlyaways[h]->SetModelMatrix(m4FlyModel);
+				m_pFlyaways[h]->AddToRenderList();
+
+				// checks for collisions and makes other rocks flyaway
+				for (uint x = 0; x < m_pEntityMngr->GetEntityCount(); x++)
+				{
+					MyEntity* pEnt = m_pEntityMngr->GetEntity(x);
+
+					if (m_pFlyaways[h]->IsColliding(pEnt))
+					{
+
+						if (m_uObjects > 0) {
+							m_uObjects--;
+						}
+
+						m_soundTwo.play();
+
+						///
+						//"collision resolution"
+						Rock* pFlyaway = new Rock("..\\_Binary\\Data\\MFBX\\Rock.fbx", "RockBye", vector3(0, 0, -.1f));
+						m_pFlyaways.push_back(pFlyaway);
+						pFlyaway->m_v3StartPos = pEnt->GetRigidBody()->GetCenterGlobal();
+						pFlyaway->m_v3EndPos = m_pFlyaways[h]->m_v3EndPos * 2;
+						///
+
+						m_pEntityMngr->RemoveEntity(pEnt->GetUniqueID());
+					}
+				}
+
+				// checks if rock reaches its range
+				if (fPercentage > .99f)
+				{
+					SafeDelete(m_pFlyaways[h]);
+					m_pFlyaways.pop_front();
+				}
+			}
+		}
+	}
+}
+
 void Simplex::Application::BulletShoot(void) {
 	///
 	if (m_pBullet.size() != 0)
@@ -539,6 +596,8 @@ void Simplex::Application::BulletShoot(void) {
 
 					if (m_pBullet[q]->IsColliding(pEntity))
 					{
+
+						//chain reaction code - destroy adjacent
 						if (m_bChain) {
 							MyRigidBody** pAdjacentArray = pEntity->GetRigidBody()->GetCollidingRigidBodies();
 							uint uAdjacentCount = pEntity->GetRigidBody()->GetCollisionCount();
@@ -549,6 +608,14 @@ void Simplex::Application::BulletShoot(void) {
 									m_uObjects--;
 								}
 
+								///
+								//"collision resolution"
+								Rock* pFlyaway = new Rock("..\\_Binary\\Data\\MFBX\\Rock.fbx", "RockBye", vector3(0, 0, -.1f));
+								m_pFlyaways.push_back(pFlyaway);
+								pFlyaway->m_v3StartPos = pAdjacentArray[i]->GetCenterGlobal();
+								pFlyaway->m_v3EndPos = m_pBullet[q]->m_v3EndPos * 2;
+								///
+
 								m_pEntityMngr->RemoveEntity(*pAdjacentArray[i]->m_pEntityUniqueID);
 							}
 						}
@@ -558,6 +625,14 @@ void Simplex::Application::BulletShoot(void) {
 						}
 
 						m_soundTwo.play();
+
+						///
+						//"collision resolution"
+						Rock* pFlyaway = new Rock("..\\_Binary\\Data\\MFBX\\Rock.fbx", "RockBye", vector3(0, 0, -.1f));
+						m_pFlyaways.push_back(pFlyaway);
+						pFlyaway->m_v3StartPos = pEntity->GetRigidBody()->GetCenterGlobal();
+						pFlyaway->m_v3EndPos = m_pBullet[q]->m_v3EndPos * 2;
+						///
 
 						m_pEntityMngr->RemoveEntity(pEntity->GetUniqueID());
 
@@ -574,10 +649,8 @@ void Simplex::Application::BulletShoot(void) {
 				// checks if bullet reaches its range
 				if (fPercentage > .99f)
 				{
-
 					SafeDelete(m_pBullet[q]);
 					m_pBullet.pop_front();
-					//element = nullptr;
 				}
 			}
 

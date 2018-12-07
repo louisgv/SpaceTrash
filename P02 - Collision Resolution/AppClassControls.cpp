@@ -143,13 +143,13 @@ void Application::ProcessKeyReleased(sf::Event a_event)
 		m_pCameraMngr->SetFPS(bFPSControl);
 		break;
 	//toggle single-hit bullets
-	case sf::Keyboard::R:
-		m_bSingleHit = !m_bSingleHit;
-		break;
+	//case sf::Keyboard::R:
+	//	m_bSingleHit = !m_bSingleHit;
+	//	break;
 	//toggle chain reaction
-	case sf::Keyboard::T:
-		m_bChain = !m_bChain;
-		break;
+	//case sf::Keyboard::T:
+	//	m_bChain = !m_bChain;
+	//	break;
 	case sf::Keyboard::PageUp:
 		++m_uOctantID;
 		if (m_uOctantID >= m_pRoot->GetOctantCount())
@@ -474,24 +474,27 @@ void Application::ProcessKeyboard(void)
 
 	//if (bMultiplier)
 	//	fMultiplier = 5.0f;
+	//no movement when game is over
+	if (m_uLives != 0 && m_uTimeLeft != 0) {
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+			m_pCameraMngr->MoveForward(m_fMovementSpeed * fMultiplier);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		m_pCameraMngr->MoveForward(m_fMovementSpeed * fMultiplier);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+			m_pCameraMngr->MoveForward(-m_fMovementSpeed * fMultiplier);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		m_pCameraMngr->MoveForward(-m_fMovementSpeed * fMultiplier);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+			m_pCameraMngr->MoveSideways(-m_fMovementSpeed * fMultiplier);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		m_pCameraMngr->MoveSideways(-m_fMovementSpeed * fMultiplier);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
+			m_pCameraMngr->MoveSideways(m_fMovementSpeed * fMultiplier);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		m_pCameraMngr->MoveSideways(m_fMovementSpeed * fMultiplier);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
+			m_pCameraMngr->MoveVertical(-m_fMovementSpeed * fMultiplier);
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		m_pCameraMngr->MoveVertical(-m_fMovementSpeed * fMultiplier);
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
+			m_pCameraMngr->MoveVertical(m_fMovementSpeed * fMultiplier);
+	}
 
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-		m_pCameraMngr->MoveVertical(m_fMovementSpeed * fMultiplier);
 #pragma endregion
 }
 //Joystick

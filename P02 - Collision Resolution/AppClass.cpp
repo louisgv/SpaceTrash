@@ -41,6 +41,23 @@ void Application::InitVariables(void)
 			m_pEntityMngr->AddEntity("..\\_Binary\\Data\\MFBX\\Rock.fbx"); //load rock
 			vector3 v3Position = vector3(glm::sphericalRand(m_fSphereRadius));
 
+			//space out the asteroids a bit - more variation in position
+			if ((uIndex % 6) == 0) {
+				v3Position = vector3(glm::sphericalRand(m_fSphereRadius / 2));
+			}
+
+			if ((uIndex % 3) == 0) {
+				v3Position = vector3(glm::sphericalRand(m_fSphereRadius / 1.7));
+			}
+
+			if ((uIndex % 2) == 0) {
+				v3Position = vector3(glm::sphericalRand(m_fSphereRadius / 1.3));
+			}
+
+			if ((uIndex % 4) == 0) {
+				v3Position = vector3(glm::sphericalRand(m_fSphereRadius / .75));
+			}
+
 			//random rotation for asteroids 
 			matrix4 m4Rotation = glm::rotate(IDENTITY_M4, glm::radians((float)rand()), glm::vec3(rand(),rand(),rand()));
 			matrix4 m4Position = m4Rotation * glm::translate(v3Position) * glm::scale(vector3(.45f));
@@ -65,6 +82,9 @@ void Application::Update(void)
 {
 	//Update the system so it knows how much time has passed since the last call
 	m_pSystem->Update();
+
+	//update flying away asteroids
+	Flyaways();
 
 	//update bullet stuff
 	BulletShoot();
@@ -142,7 +162,11 @@ void Application::Display(void)
 		if (m_pPlayer->GetRigidBody()->IsColliding(m_pEntityMngr->GetEntity(x)->GetRigidBody()))
 		{
 			//m_pCameraMngr->SetPosition(vector3(0.f));
-			m_pCameraMngr->ResetCamera();
+			//Set the position and target of the camera
+			m_pCameraMngr->SetPositionTargetAndUpward(
+				vector3(0.0f, 0.0f, 0.0f), //Position
+				vector3(0.0f, 0.0f, -3.0f),	//Target
+				AXIS_Y);					//Up
 			m_soundTwo.play();
 			m_uLives--;
 		}
@@ -192,6 +216,16 @@ void Application::Release(void)
 			if (m_pBullet[q] != nullptr)
 			{
 				SafeDelete(m_pBullet[q]);
+			}
+		}
+	}
+	if (m_pFlyaways.size() != 0)
+	{
+		for (uint q = 0; q < m_pFlyaways.size(); q++)
+		{
+			if (m_pFlyaways[q] != nullptr)
+			{
+				SafeDelete(m_pFlyaways[q]);
 			}
 		}
 	}

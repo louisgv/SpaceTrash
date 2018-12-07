@@ -7,6 +7,7 @@ Date: 2017/07
 
 #include "MyEntity.h"
 #include "Bullet.h"
+#include "Rock.h"
 
 namespace Simplex
 {
