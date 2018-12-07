@@ -547,7 +547,10 @@ void Simplex::Application::Flyaways(void) {
 						Rock* pFlyaway = new Rock("..\\_Binary\\Data\\MFBX\\Rock.fbx", "RockBye", vector3(0, 0, -.1f));
 						m_pFlyaways.push_back(pFlyaway);
 						pFlyaway->m_v3StartPos = pEnt->GetRigidBody()->GetCenterGlobal();
-						pFlyaway->m_v3EndPos = m_pFlyaways[h]->m_v3EndPos * 2;
+
+						vector3 v3FlyAwayDirection = glm::normalize(pFlyaway->m_v3StartPos - m_pFlyaways[h]->GetRigidBody()->GetCenterGlobal());
+
+						pFlyaway->m_v3EndPos = pFlyaway->m_v3StartPos + v3FlyAwayDirection * 2;
 						///
 
 						m_pEntityMngr->RemoveEntity(pEnt->GetUniqueID());
